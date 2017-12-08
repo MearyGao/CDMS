@@ -11,6 +11,7 @@ namespace CDMS.Web
     [Login]
     public class BaseController : Controller
     {
+
         private User user;
 
         public BaseController()
