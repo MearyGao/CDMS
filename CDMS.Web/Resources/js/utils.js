@@ -298,8 +298,9 @@ layui.define(['layer'], function (exports) {
 
                 var type = input.attr('type');
                 var value = $.trim(data[key]).replace(/&nbsp;/g, '');
-                var tagName = input.tagName;
+                var tagName = input[0].tagName;
                 var tagFlag = true;
+
                 switch (tagName) {
                     case 'TEXTAREA':
                         var dataType = input.attr('data-type');

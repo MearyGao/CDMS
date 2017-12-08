@@ -13,29 +13,29 @@
 
 @section scripts{
     <script type="text/javascript">
-        layui.use(['jquery', 'table', 'utils'], function () {
-            var $ = layui.jquery, table = layui.table, utils = layui.utils, btn = utils.btns;
+        layui.use(['jquery', 'mytable', 'utils'], function () {
+            var $ = layui.jquery, table = layui.mytable, utils = layui.utils, btn = utils.btns;
 
             var tableId = 'tableList';
-            var options = {
-                id: tableId,
-                elem: '#' + tableId,
-                url: '/sys/menuTable/getList',
-                method: 'post',
-                tr_click_checkable: true,
-                page: true,
-                limit: 10,
-                limits: [10, 20, 30],
-                where: getParameters(),
-                cols: [
-                     [{ checkbox: true,width:'5%' },
-                     { field: 'NAME', title: '角色名称', width: '20%' },
-                     { field: 'REMARK', title: '角色描述', width: '30%' },
-                     { field: 'SORTID', title: '排序', width: '10%', align: 'center' }
-                     ]
-                ]
-            };
-            table.render(options);
+            //var options = {
+            //    id: tableId,
+            //    elem: '#' + tableId,
+            //    url: '/sys/menuTable/getList',
+            //    method: 'post',
+            //    tr_click_checkable: true,
+            //    page: true,
+            //    limit: 10,
+            //    limits: [10, 20, 30],
+            //    where: getParameters(),
+            //    cols: [
+            //         [{ checkbox: true,width:'5%' },
+            //         { field: 'NAME', title: '角色名称', width: '20%' },
+            //         { field: 'REMARK', title: '角色描述', width: '30%' },
+            //         { field: 'SORTID', title: '排序', width: '10%', align: 'center' }
+            //         ]
+            //    ]
+            //};
+            table.render(tableId,'/sys/menuTable/getList', );
 
             $('#' + btn.btn_query).click(function () {
                 table.reload(tableId, { where: getParameters() });
