@@ -62,6 +62,6 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-.js linguist-language=Java
-.css linguist-language=Java
-.cshtml linguist-language=Java
+*.js linguist-language=csharp
+*.css linguist-language=csharp
+*.cshtml linguist-language=csharp
