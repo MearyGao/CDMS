@@ -18,7 +18,7 @@ namespace CDMS.Web
                name: "Default",
                url: "{controller}/{action}/{id}",
                namespaces: new string[] { "CDMS.Web.Controllers" },
-               defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+               defaults: new { controller = "Main", action = "Index", id = UrlParameter.Optional }
            );
         }
     }
