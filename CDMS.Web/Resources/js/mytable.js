@@ -6,7 +6,6 @@ layui.define(['jquery', 'table'], function (exports) {
         var tableId = 'myTable';
         var defaults = {
             id: tableId,
-            elem: '#' + tableId,
             url: '',
             method: 'post',
             tr_click_checkable: true,
@@ -14,11 +13,12 @@ layui.define(['jquery', 'table'], function (exports) {
             limit: 10,
             limits: [10, 20, 30]
         };
+        this.options = {};
         this.set(defaults);
     }
 
     myTable.prototype.set = function (o) {
-        this.options = $.extend({}, o || {});
+        this.options = $.extend(this.options, o || {});
         return this;
     }
 
@@ -33,7 +33,9 @@ layui.define(['jquery', 'table'], function (exports) {
 
         that.set(d);
         that.set(o || {});
+        that.set({ elem: '#' + that.options.id });
 
+        //console.log(that.options);
         table.render(that.options);
     }
 
@@ -42,7 +44,12 @@ layui.define(['jquery', 'table'], function (exports) {
         table.reload(options.id, o || {});
     }
 
-    var table = new myTable();
+    myTable.prototype.checkStatus = function () {
+        var that = this, options = that.options;
+        return table.checkStatus(options.id).data;
+    }
 
-    exports('mytable', table);
+    var mytable = new myTable();
+
+    exports('mytable', mytable);
 });

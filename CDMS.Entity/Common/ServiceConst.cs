@@ -11,5 +11,10 @@ namespace CDMS.Entity
         /// 用户授权列表 缓存 key {0} 为 用户ID
         /// </summary>
         public static readonly string UserAuthListCache = "UserAuthList_{0}";
+
+        /// <summary>
+        /// 菜单列表缓存
+        /// </summary>
+        public static readonly string MenuColumnListCache = "MenuColumnList";
     }
 }

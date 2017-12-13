@@ -24,9 +24,21 @@ namespace CDMS.Utility
             var obj = JObject.Parse(json);
             if (obj != null)
             {
-               t= obj.Value<T>(key);
+                t = obj.Value<T>(key);
             }
             return t;
+        }
+
+        public static Dictionary<string, object> ToDictionary(this string json)
+        {
+            if (json.IsEmpty()) return null;
+            Dictionary<string, object> dic = null;
+            try
+            {
+                dic = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            }
+            catch { }
+            return dic;
         }
 
         public static bool IsEmpty(this string s)

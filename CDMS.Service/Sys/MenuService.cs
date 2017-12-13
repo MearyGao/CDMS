@@ -59,17 +59,17 @@ namespace CDMS.Service
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        IEnumerable<Menu> GetAuthMenuList(string url, MenuType type = MenuType.Menu);
+        AuthMenu GetAuthMenuList(string url, MenuType type = MenuType.Menu, MenuColumnType columnType = MenuColumnType.CONDITION);
     }
 
     public class MenuService : IMenuService
     {
         readonly IMenuRepository menuRep;
-        readonly IUserService us;
-        public MenuService(IMenuRepository imr, IUserService ius)
+        readonly ILogService log;
+        public MenuService(IMenuRepository imr, ILogService ils)
         {
             menuRep = imr;
-            us = ius;
+            log = ils;
         }
 
         public IEnumerable<Menu> GetTreeList()
@@ -97,7 +97,7 @@ namespace CDMS.Service
         public AjaxResult Save(Menu menu)
         {
             bool addFlag = menu.ID < 1;
-            var user = us.GetCurrent();
+            var user = log.User;
 
             menu.CREATEBY = user.ACCOUNT;
             menu.CREATEDATE = DateTime.Now;
@@ -127,7 +127,8 @@ namespace CDMS.Service
                     m.SORTID,
                     m.UPDATEBY,
                     m.UPDATEDATE,
-                    m.PARENTID
+                    m.PARENTID,
+                    m.DISPLAY
                 }, m => m.ID == menu.ID);
                 if (flag) RemoveAuthListCache();
                 return new AjaxResult(flag, flag ? "菜单修改成功" : "菜单修改失败");
@@ -150,7 +151,7 @@ namespace CDMS.Service
 
         public IEnumerable<Menu> GetAuthList()
         {
-            var user = us.GetCurrent();
+            var user = log.User;
             int userId = user.ID;
 
             string key = string.Format(ServiceConst.UserAuthListCache, userId);
@@ -180,9 +181,9 @@ namespace CDMS.Service
             return null;
         }
 
-        public IEnumerable<Menu> GetAuthMenuList(string url, MenuType type = MenuType.Menu)
+        public AuthMenu GetAuthMenuList(string url, MenuType type = MenuType.Menu, MenuColumnType columnType = MenuColumnType.CONDITION)
         {
-            if (string.IsNullOrEmpty(url)) return null;
+            if (string.IsNullOrEmpty(url)) return new AuthMenu();
             url = url.ToLower();
             var list = this.GetAuthList();
             if (list != null && list.Count() > 0)
@@ -190,30 +191,36 @@ namespace CDMS.Service
                 var tempList = list.Where(m =>
                 {
                     if (string.IsNullOrEmpty(m.URL)) return false;
-                    return m.URL.ToLower().Contains(url);
+                    return string.Equals(m.URL, url, StringComparison.InvariantCultureIgnoreCase);
                 });
                 if (type == MenuType.Menu)
                 {
-                    return tempList;
+                    return new AuthMenu(tempList);
                 }
                 else if (type == MenuType.Button)
                 {
+                    AuthMenu am = new AuthMenu();
+                    int menuId = 0;
                     if (tempList != null && tempList.Count() > 0)
                     {
                         int menuType = (int)type;
                         var menu = tempList.FirstOrDefault();
-                        return list.Where(m => m.PARENTID == menu.ID && m.TYPE == menuType);
+                        menuId = menu.ID;
+                        am.Menus = list.Where(m => m.PARENTID == menuId && m.TYPE == menuType);
                     }
+                    int uid = log.User.ID;
+                    if (menuId > 0) am.Columns = menuRep.GetAuthColumnList(menuId, uid, columnType);
+                    return am;
                 }
             }
-            return null;
+            return new AuthMenu();
         }
 
         #endregion
 
         private void RemoveAuthListCache()
         {
-            var user = us.GetCurrent();
+            var user = log.User;
             int userId = user.ID;
 
             string key = string.Format(ServiceConst.UserAuthListCache, userId);
@@ -247,6 +254,7 @@ namespace CDMS.Service
                 children = children.OrderBy(m => m.SORTID).ToList();
                 foreach (var m in children)
                 {
+                    if (!m.DISPLAY) continue;
                     var tree = new MenuTree(m);
                     var ms = GetMenuTree2(m.ID, list);
                     if (ms != null && ms.Count() > 0) tree.children = ms;

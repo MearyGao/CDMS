@@ -38,7 +38,7 @@ namespace CDMS.Data
                 sql.Or(m => m.REMARK.Contains(key));
                 sql.End();
             }
-            sql.OrderBy(m => m.ID);
+            sql.OrderBy(m => m.SORTID, m => m.ID);
             var list = base.GetPageList(p);
             return new LayuiPaginationOut(p, list);
         }

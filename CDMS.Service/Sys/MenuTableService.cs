@@ -38,6 +38,13 @@ namespace CDMS.Service
         /// <param name="ids"></param>
         /// <returns></returns>
         AjaxResult Delete(int[] ids);
+
+        /// <summary>
+        /// 获得表列表
+        /// </summary>
+        /// <param name="dbKey"></param>
+        /// <returns></returns>
+        AjaxResult GetTableList(string dbKey);
     }
 
     internal class MenuTableService : IMenuTableService
@@ -48,8 +55,8 @@ namespace CDMS.Service
         {
             tableRep = imtr;
             log = ils;
-            log.Title = "";
-            log.Type = TableType.NONE;
+            log.Title = "菜单表";
+            log.Type = TableType.SYS_MENUTABLE;
         }
 
         public LayuiPaginationOut GetList(LayuiPaginationIn p)
@@ -65,6 +72,7 @@ namespace CDMS.Service
             model.CREATEDATE = DateTime.Now;
             model.UPDATEBY = model.CREATEBY;
             model.UPDATEDATE = model.CREATEDATE;
+            model.ENABLED = true;
             if (addFlag)
             {
                 int tableId = tableRep.Add<int>(model);
@@ -100,6 +108,20 @@ namespace CDMS.Service
             ActionType type = ActionType.SYS_DELETE;
             string msg = WebConst.GetActionMsg(type, flag);
             return new AjaxResult(flag, msg);
+        }
+
+        public AjaxResult GetTableList(string dbKey)
+        {
+            var list = tableRep.GetTableList(dbKey);
+
+            var tempList = from item in list
+                           select new
+                           {
+                               value = item.SCHEMANAME,
+                               text = item.TABLENAME
+                           };
+
+            return new AjaxResult(true, data: tempList);
         }
     }
 }

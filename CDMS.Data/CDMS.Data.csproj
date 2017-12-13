@@ -47,6 +47,7 @@
     <Compile Include="Sys\CategoryRepository.cs" />
     <Compile Include="Sys\ImageRepository.cs" />
     <Compile Include="Sys\LogRepository.cs" />
+    <Compile Include="Sys\MenuColumnRepository.cs" />
     <Compile Include="Sys\MenuRepository.cs" />
     <Compile Include="Sys\MenuTableRepository.cs" />
     <Compile Include="Sys\RoleRepository.cs" />

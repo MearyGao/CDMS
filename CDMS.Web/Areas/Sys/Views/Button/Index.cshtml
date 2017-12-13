@@ -33,7 +33,8 @@
                 where: getParameters(),
                 cols: [
                      [{ checkbox: true, width: '5%' },
-                     { field: 'NAME', title: '按钮名称', width: '20%' },
+                     { field: 'NAME', title: '名称', width: '15%' },
+                     { field: 'CODE', title: 'CODE', width: '10%' },
                      {
                          field: 'IMG', title: 'ICON', width: '10%', align: 'center',
                          content: function (value, item, index) {
@@ -42,7 +43,7 @@
                          }
                      },
                      { field: 'CLASSNAME', title: '样式', width: '15%' },
-                     { field: 'REMARK', title: '按钮描述', width: '20%' },
+                     { field: 'REMARK', title: '描述', width: '20%' },
                      { field: 'SORTID', title: '排序', width: '10%', align: 'center' }
                      ]
                 ]

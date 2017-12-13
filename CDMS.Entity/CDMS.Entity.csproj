@@ -50,9 +50,11 @@
     <Compile Include="Common\ServiceConst.cs" />
     <Compile Include="Sys\Category.cs" />
     <Compile Include="Sys\Extend\ActionType.cs" />
+    <Compile Include="Sys\Extend\AuthMenu.cs" />
     <Compile Include="Sys\Extend\DevelopLog.cs" />
     <Compile Include="Sys\Extend\ImageVM.cs" />
     <Compile Include="Sys\Extend\LOGType.cs" />
+    <Compile Include="Sys\Extend\MenuColumnType.cs" />
     <Compile Include="Sys\Extend\MenuTree.cs" />
     <Compile Include="Sys\Extend\MenuType.cs" />
     <Compile Include="Sys\Extend\TableType.cs" />
@@ -60,6 +62,7 @@
     <Compile Include="Sys\ImageDetail.cs" />
     <Compile Include="Sys\Log.cs" />
     <Compile Include="Sys\Menu.cs" />
+    <Compile Include="Sys\MenuColumn.cs" />
     <Compile Include="Sys\MenuTable.cs" />
     <Compile Include="Sys\Org.cs" />
     <Compile Include="Sys\OrgUser.cs" />

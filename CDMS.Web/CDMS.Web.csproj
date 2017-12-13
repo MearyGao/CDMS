@@ -116,6 +116,7 @@
     <Content Include="Resources\images\mobile.jpg" />
     <Content Include="Resources\images\xjpnew.png" />
     <Content Include="Resources\js\app.js" />
+    <Content Include="Resources\js\myselect.js" />
     <Content Include="Resources\js\mytable.js" />
     <Content Include="Resources\js\navbar.js" />
     <Content Include="Resources\js\onelevel.js" />
@@ -253,7 +254,6 @@
     <Content Include="Resources\plugins\layui-dev\lay\modules\mobile\upload-mobile.js" />
     <Content Include="Resources\plugins\layui-dev\lay\modules\mobile\zepto.js" />
     <Content Include="Resources\plugins\layui-dev\lay\modules\table.js" />
-    <Content Include="Resources\plugins\layui-dev\lay\modules\table1.js" />
     <Content Include="Resources\plugins\layui-dev\lay\modules\tree.js" />
     <Content Include="Resources\plugins\layui-dev\lay\modules\upload.js" />
     <Content Include="Resources\plugins\layui-dev\lay\modules\util.js" />
@@ -264,6 +264,7 @@
   <ItemGroup>
     <Compile Include="AppCode\AuthAttribute.cs" />
     <Compile Include="AppCode\LoginAttribute.cs" />
+    <Compile Include="AppCode\MyJsonResult.cs" />
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UIStyleConfig.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Areas\Sys\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Sys\Controllers\ImageController.cs" />
     <Compile Include="Areas\Sys\Controllers\LogController.cs" />
+    <Compile Include="Areas\Sys\Controllers\MenuColumnController.cs" />
     <Compile Include="Areas\Sys\Controllers\MenuController.cs" />
     <Compile Include="Areas\Sys\Controllers\MenuTableController.cs" />
     <Compile Include="Areas\Sys\Controllers\RoleController.cs" />
@@ -338,6 +340,9 @@
     <Content Include="Areas\Sys\Views\Image\Index.cshtml" />
     <Content Include="Areas\Sys\Views\MenuTable\Index.cshtml" />
     <Content Include="Areas\Sys\Views\MenuTable\Form.cshtml" />
+    <Content Include="Areas\Sys\Views\MenuColumn\Index.cshtml" />
+    <Content Include="Areas\Sys\Views\MenuColumn\Form.cshtml" />
+    <Content Include="Areas\Sys\Views\MenuColumn\List.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

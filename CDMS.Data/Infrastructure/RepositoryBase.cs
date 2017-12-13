@@ -400,6 +400,96 @@ namespace CDMS.Data
             return sql;
         }
 
+        public string ToSql(string json, out Dictionary<string, object> parameters)
+        {
+            parameters = new Dictionary<string, object>();
+            if (json.IsEmpty()) return string.Empty;
+
+            var list = GetMenuColumns();
+
+            if (list == null || list.Count() < 0) return string.Empty;
+
+            var dic = json.ToDictionary();
+            int index = 0;
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in dic)
+            {
+                if (item.Value == null || item.Value.ToString().IsEmpty()) continue;
+                string key = item.Key;
+                string[] keys = key.Split('|');
+                if (keys[0] != "ID" || keys.Length < 2) continue;
+
+                int id = item.Value.ToString().ToInt();
+                var column = list.FirstOrDefault(m => m.ID == id);
+                if (column != null)
+                {
+                    object value = dic[column.NAME];
+                    if (value == null || value.ToString().IsEmpty()) continue;
+                    sb.AppendFormat("{0} {1} @{0}", column.NAME, GetSqlOperation(column.CONDITIONTYPE));
+                    if (index > 0) sb.Append(" AND ");
+                    if (column.CONDITIONTYPE == 7) value = string.Format("%{0}%", value.ToString());
+                    parameters.Add(column.NAME, value);
+                    index++;
+                }
+            }
+            return sb.ToString();
+        }
+
+        private string GetSqlOperation(int type)
+        {
+            string value = "";
+            switch (type)
+            {
+                case 1:
+                    value = "=";
+                    break;
+                case 2:
+                    value = ">";
+                    break;
+                case 3:
+                    value = ">=";
+                    break;
+                case 4:
+                    value = "<";
+                    break;
+                case 5:
+                    value = "<=";
+                    break;
+                case 6:
+                    value = "<>";
+                    break;
+                case 7:
+                    value = "LIKE";
+                    break;
+                default:
+                    value = "=";
+                    break;
+            }
+            if (value.IsEmpty()) throw new Exception("未知的SQL操作符");
+            return value;
+        }
+
+        private IEnumerable<MenuColumn> GetMenuColumns()
+        {
+            string key = ServiceConst.MenuColumnListCache;
+            var list = CacheHelper.Get<IEnumerable<MenuColumn>>(key);
+            if (list == null || list.Count() < 1)
+            {
+                var columnSql = this.GetSqlLam<MenuColumn>();
+                columnSql.Where(m => m.ENABLED == true);
+                columnSql.SelectAll();
+                list = this.GetList<MenuColumn>(columnSql.GetSql(), columnSql.GetParameters());
+
+                CacheHelper.Add(key, list);
+            }
+            if (list != null)
+            {
+                int type = (int)MenuColumnType.CONDITION;
+                list = list.Where(m => m.TYPE == type);
+            }
+            return list;
+        }
+
         #endregion
 
         #region 存储过程

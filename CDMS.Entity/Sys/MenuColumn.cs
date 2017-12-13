@@ -5,8 +5,8 @@ using System.Text;
 
 namespace CDMS.Entity
 {
-    [Table("SYS_MENU")]
-    public class Menu
+    [Table("SYS_MENUCOLUMN")]
+    public class MenuColumn
     {
         /// <summary>
         ///ID
@@ -14,52 +14,45 @@ namespace CDMS.Entity
         [Column(true)]
         public int ID { get; set; }
         /// <summary>
-        ///名称
+        ///MENUID
+        /// </summary>
+        public int MENUID { get; set; }
+
+        /// <summary>
+        /// 表ID
+        /// </summary>
+        public int TABLEID { get; set; }
+        /// <summary>
+        ///NAME
         /// </summary>
         public string NAME { get; set; }
         /// <summary>
-        ///TITLE
-        /// </summary>
-        public string TITLE { get; set; }
-        /// <summary>
-        ///代码
-        /// </summary>
-        public string CODE { get; set; }
-        /// <summary>
-        ///图片
-        /// </summary>
-        public string IMG { get; set; }
-        /// <summary>
-        ///类型 1=目录 2=菜单 3=按钮
+        ///TYPE
         /// </summary>
         public int TYPE { get; set; }
         /// <summary>
-        ///URL
+        ///CONDITIONTYPE
         /// </summary>
-        public string URL { get; set; }
+        public int CONDITIONTYPE { get; set; }
         /// <summary>
-        ///目标指向
+        ///INPUTTYPE
         /// </summary>
-        public string TARGET { get; set; }
+        public int INPUTTYPE { get; set; }
         /// <summary>
-        ///父ID
+        /// 字段类型
         /// </summary>
-        public int PARENTID { get; set; }
+        public int FIELDTYPE { get; set; }
         /// <summary>
-        ///样式名称
+        /// 字段描述
         /// </summary>
-        public string CLASSNAME { get; set; }
+        public string FIELDTEXT { get; set; }
 
         /// <summary>
-        /// 是否显示 1=显示 0=隐藏 默认 1
+        /// 值
         /// </summary>
-        public bool DISPLAY { get; set; }
+        public string FIELDVALUE { get; set; }
         /// <summary>
-        ///描述
-        /// </summary>
-        public string REMARK { get; set; }
-        /// <summary>
-        ///排序ID
+        ///SORTID
         /// </summary>
         public int SORTID { get; set; }
         /// <summary>

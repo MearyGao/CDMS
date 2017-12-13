@@ -45,6 +45,9 @@
                                  case 3:
                                      v = '按钮';
                                      break;
+                                 case 4:
+                                     v = '字段';
+                                     break;
                              }
                              return v;
                          }
@@ -56,8 +59,8 @@
                 rowAttributes: function (item, index) {
                     return { 'data-tt-id': item.ID, 'data-tt-parent-id': item.PARENTID };
                 },
-                done: function () {
-                    $('.layui-table-main table').treetable({ initialState: 'expand', cellFilter: '.layui-table-cell', stringExpand: '展开', stringCollapse: '折叠' });
+                done: function () {//initialState: 'expand',
+                    $('.layui-table-main table').treetable({ cellFilter: '.layui-table-cell', stringExpand: '展开', stringCollapse: '折叠' });
                 }
             };
             table.render(options);
@@ -79,6 +82,11 @@
                 }
                 else if (len > 1) {
                     utils.alert('只能选择一行修改');
+                    return;
+                }
+                var type = rows[0].TYPE;
+                if (type > 3) {
+                    utils.alert('只能修改[目录,菜单,按钮]');
                     return;
                 }
                 var index = utils.open({
@@ -122,6 +130,28 @@
                 var index = utils.open({
                     title: '分配按钮',
                     url: '/sys/button/list?pid=' + rows[0].ID,
+                    area: ['700px', '600px']
+                });
+            });
+
+            $('#' + btn.btn_column).click(function () {
+                var rows = table.checkStatus(tableId).data;
+                var len = rows.length;
+                if (len < 1) {
+                    utils.alert('没有选择任何行');
+                    return;
+                }
+                else if (len > 1) {
+                    utils.alert('只能选择一行分配列');
+                    return;
+                }
+                if (rows[0].TYPE > 3) {
+                    utils.alert('只能给[目录|菜单|按钮]设置表名');
+                    return;
+                }
+                var index = utils.open({
+                    title: '设置表名',
+                    url: '/sys/menuColumn/list?id=' + rows[0].ID,
                     area: ['700px', '600px']
                 });
             });

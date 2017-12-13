@@ -31,8 +31,8 @@ namespace CDMS.Web.Controllers
         public ActionResult Pwd(string pwd)
         {
             if (string.IsNullOrEmpty(pwd)) pwd = "111111";
-            string result = EncryptHelper.Encrypt(pwd);
-            return Content(result);
+            var obj = new { pwd = pwd, pwdstring = EncryptHelper.Encrypt(pwd) };
+            return Json(obj);
         }
 
         [HttpPost]

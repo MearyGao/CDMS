@@ -17,6 +17,13 @@ namespace CDMS.Data
         LayuiPaginationOut GetList(LayuiPaginationIn p);
 
         /// <summary>
+        /// 获得表列表
+        /// </summary>
+        /// <param name="dbKey"></param>
+        /// <returns></returns>
+        IEnumerable<dynamic> GetTableList(string dbKey);
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="ids"></param>
@@ -31,17 +38,33 @@ namespace CDMS.Data
             sql.SelectAll();
             sql.Where(m => m.ENABLED == true);
 
+            var menuSql = sql.Join<Menu>((t, s) => t.MENUID == s.ID, aliasName: "b");
+            menuSql.Select(m => m.NAME);
+
             MenuTable table = p.json.ToObject<MenuTable>();
-            if (table.MENUID > 0) sql.And(m => m.MENUID == table.MENUID);
-            if (!table.TABLENAME.IsEmpty())
+            if (table != null)
             {
-                sql.And(m => m.TABLENAME.Contains(table.TABLENAME));
+                if (table.MENUID > 0) sql.And(m => m.MENUID == table.MENUID);
+                if (!table.TABLENAME.IsEmpty())
+                {
+                    sql.And(m => m.TABLENAME.Contains(table.TABLENAME));
+                }
             }
 
-            sql.OrderBy(m => m.SORTID);
+            sql.OrderBy(m => m.MENUID, m => m.SORTID);
 
-            var list = GetPageList(p);
+            var list = base.GetDynamicPageList(p, sql);
+
             return new LayuiPaginationOut(p, list);
+        }
+
+        public IEnumerable<dynamic> GetTableList(string dbKey)
+        {
+            base.ChangeDb(dbKey);
+
+            string sqlText = @"SELECT a.name AS TABLENAME,b.name AS SCHEMANAME FROM sys.objects AS a LEFT JOIN sys.schemas AS b ON a.schema_id=b.schema_id WHERE type='u' ORDER BY a.name";
+
+            return base.GetDynamicList(sqlText, null);
         }
 
         public bool Delete(int[] ids)

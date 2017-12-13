@@ -1,16 +1,10 @@
-﻿@{
-    ViewBag.Title = "Index";
-}
+﻿
+<form id="form1" class="layui-form">
+    <blockquote class="layui-elem-quote">
+        @Html.Action("button", "menu")
+    </blockquote>
+</form>
 
-<blockquote class="layui-elem-quote">
-    <div class="layui-inline">
-        <div class="layui-input-inline">
-            <input type="text" value="" id="txtKey" placeholder="请输入关键字" class="layui-input" />
-        </div>
-        <a class="layui-btn search_btn" id="btn-query">查询</a>
-    </div>
-    @Html.Action("button", "menu")
-</blockquote>
 <div class="layui-form">
     <table class="layui-table" id="roleList"></table>
 </div>
@@ -32,7 +26,7 @@
                 limits: [10, 20, 30],
                 where: getParameters(),
                 cols: [
-                     [{ checkbox: true,width:'5%' },
+                     [{ checkbox: true, width: '5%' },
                      { field: 'NAME', title: '角色名称', width: '20%' },
                      { field: 'REMARK', title: '角色描述', width: '30%' },
                      { field: 'SORTID', title: '排序', width: '10%', align: 'center' }
@@ -124,7 +118,8 @@
             });
 
             function getParameters() {
-                return { json: $('#txtKey').val() };
+                var model = utils.getFormData(document.body);
+                return { json: JSON.stringify(model) };
             }
         });
     </script>

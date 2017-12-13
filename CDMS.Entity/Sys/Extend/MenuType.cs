@@ -18,6 +18,11 @@ namespace CDMS.Entity
         /// <summary>
         /// 按钮
         /// </summary>
-        Button = 3
+        Button = 3,
+
+        /// <summary>
+        /// 字段
+        /// </summary>
+        Field = 4
     }
 }

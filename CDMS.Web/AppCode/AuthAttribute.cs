@@ -21,9 +21,9 @@ namespace CDMS.Web
 
             string url = filterContext.HttpContext.Request.Path.ToLower();
 
-            var list = MenuService.GetAuthMenuList(url);
+            var model = MenuService.GetAuthMenuList(url);
 
-            if (list == null || list.Count() < 1)
+            if (model == null || !model.HaveMenuRight())
             {
                 bool isAjax = filterContext.HttpContext.Request.IsAjaxRequest();
                 if (isAjax)

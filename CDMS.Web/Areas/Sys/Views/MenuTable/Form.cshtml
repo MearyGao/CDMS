@@ -1,1 +1,127 @@
 ﻿
+<form class="layui-form" id="form1">
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <select type="text" id="MENUID" name="MENUID" lay-filter="MENUID" autocomplete="off" placeholder="请选择菜单" class="layui-select"></select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">数据库<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <select class="layui-select" id="DBNAME" name="DBNAME" lay-filter="dbName" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">架构<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="SCHEMANAME" name="SCHEMANAME" placeholder="请选择表名" class="layui-input" lay-verify="required" readonly="readonly" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">表名<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <select type="text" id="TABLENAME1" class="layui-select" lay-filter="dbtName" lay-verify="required"></select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="text" name="SORTID" autocomplete="off" value="100" placeholder="请输入排序" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="save">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary" id="cancel">取消</button>
+            <input type="hidden" name="ID" value="0" />
+            <input type="hidden" id="TABLENAME" name="TABLENAME" />
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script type="text/javascript">
+        layui.use(['form', 'myselect', 'treeSelector', 'utils'], function () {
+            var $ = layui.jquery, form = layui.form, utils = layui.utils, mySelect = layui.myselect, tree = layui.treeSelector;
+
+            var dbId = '#DBNAME';
+            var dboId = '#SCHEMANAME';
+            var dbOptions = {
+                elem: dbId,
+                data: [{ value: 'CDMS_BASE', text: '默认-[connectString]' }],
+                callback: function () {
+                    renderForm();
+                }
+            };
+            mySelect.render(dbOptions);
+
+            form.on('submit(save)', function (data) {
+                //data.field["MENUID"] = utils.getQueryString('menuid');
+                utils.post('/sys/menuTable/save', { old: getOldObject(), model: data.field });
+                return false;
+            });
+
+            form.on('select(dbName)', function (data) {
+                var value = data.value;
+                var id = '#TABLENAME1';
+                if (value) {
+                    var tbOptions = {
+                        elem: id,
+                        callback: function () {
+                            renderForm();
+                        },
+                        ajax: {
+                            url: '/sys/menuTable/getTableList',
+                            data: { dbKey: $(dbId).val() }
+                        }
+                    };
+                    mySelect.render(tbOptions);
+                }
+                else {
+                    $(id).html('');
+                    $(dboId).val('');
+                    renderForm();
+                }
+            });
+
+            form.on('select(dbtName)', function (data) {
+                $(dboId).val(data.value);
+                $('#TABLENAME').val(data.text);
+            });
+
+            $('#cancel').on('click', function () {
+                utils.closeFrame();
+            });
+
+            var json = '@Html.Raw(ViewBag.Json)';
+            var treeOption = {
+                type: 'remote',
+                url: '/sys/menu/getTreeSelectList',
+                selector: '#MENUID',
+                repeatString: '&nbsp;&nbsp;',//
+                preString: '',
+                callback: function () {
+                    if (json && json.length > 0) {
+                        utils.setFormData(json);
+                    }
+                    renderForm();
+                }
+            };
+            tree.set(treeOption).render();
+
+            function getOldObject() {
+                if (json && json.length > 0) {
+                    return JSON.parse(json);
+                }
+                return null;
+            }
+
+            function renderForm(s) {
+                form.render(s || 'select');
+            }
+        });
+    </script>
+}

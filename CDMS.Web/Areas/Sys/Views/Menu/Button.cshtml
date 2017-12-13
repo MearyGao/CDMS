@@ -1,15 +1,54 @@
 ﻿@using CDMS.Entity
-@model IEnumerable<Menu>
+@model AuthMenu
 @{
     Layout = null;
-    var buttons = Model;
+    var buttons = Model.Menus;
+    var columns = Model.Columns;
+}
+@if (columns != null && columns.Count() > 0)
+{
+    int mid = columns.FirstOrDefault().MENUID;
+    foreach (var item in columns)
+    {
+        string name = item.NAME;
+        int type = item.INPUTTYPE;
+        string holder = string.Format("请输入{0}", item.FIELDTEXT);
+        string hiddenClass = type == 3 ? "hidden" : "";
+        string idname = string.Format("ID|{0}", name);
+        <div class="layui-inline @hiddenClass">
+            @item.FIELDTEXT
+            <div class="layui-input-inline">
+                @if (type == 1)
+                {
+                    <input type="text" id="@name" name="@name" placeholder="@holder" class="layui-input" />
+                }
+                else if (type == 2)
+                {
+                    <select id="@name" name="@name" class="layui-select"></select>
+                }
+                else if (type == 3)
+                {
+                    <input type="hidden" id="@name" name="@name" value="@item.FIELDVALUE" />
+                }
+                else if (type == 4)
+                {
+                    string layData = "{" + string.Format("elem:'#{0}'", name) + "}";
+                    <input type="text" id="@name" name="@name" placeholder="@holder" class="layui-input layui-date" lay-data="@layData" />
+                }
+                <input type="hidden" name="@idname" value="@item.ID" />
+            </div>
+        </div>
+    }
 }
 @if (buttons != null && buttons.Count() > 0)
 {
     foreach (var item in buttons)
     {
         <div class="layui-inline">
-            <a class="layui-btn @item.CLASSNAME" id="@item.CODE">@if (!string.IsNullOrEmpty(item.IMG)){<i class="layui-icon">@Html.Raw(item.IMG)</i>}@item.NAME</a>
+            <a class="layui-btn @item.CLASSNAME" id="@item.CODE">
+                @if (!string.IsNullOrEmpty(item.IMG))
+                {<i class="layui-icon">@Html.Raw(item.IMG)</i>}@item.NAME
+            </a>
         </div>
     }
 }

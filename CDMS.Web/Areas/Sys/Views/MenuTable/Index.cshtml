@@ -17,25 +17,18 @@
             var $ = layui.jquery, table = layui.mytable, utils = layui.utils, btn = utils.btns;
 
             var tableId = 'tableList';
-            //var options = {
-            //    id: tableId,
-            //    elem: '#' + tableId,
-            //    url: '/sys/menuTable/getList',
-            //    method: 'post',
-            //    tr_click_checkable: true,
-            //    page: true,
-            //    limit: 10,
-            //    limits: [10, 20, 30],
-            //    where: getParameters(),
-            //    cols: [
-            //         [{ checkbox: true,width:'5%' },
-            //         { field: 'NAME', title: '角色名称', width: '20%' },
-            //         { field: 'REMARK', title: '角色描述', width: '30%' },
-            //         { field: 'SORTID', title: '排序', width: '10%', align: 'center' }
-            //         ]
-            //    ]
-            //};
-            table.render(tableId,'/sys/menuTable/getList', );
+
+            var cols = [
+                   [{ checkbox: true, width: '5%' },
+                   { field: 'NAME', title: '菜单', width: '10%' },
+                   { field: 'DBNAME', title: '数据库', width: '10%' },
+                   { field: 'SCHEMANAME', title: '架构', width: '10%' },
+                   { field: 'TABLENAME', title: '表', width: '10%' },
+                   { field: 'SORTID', title: '排序', width: '10%', align: 'center' }
+                   ]
+            ];
+
+            table.render(tableId, '/sys/menuTable/getList', cols, getParameters());
 
             $('#' + btn.btn_query).click(function () {
                 table.reload(tableId, { where: getParameters() });
@@ -43,14 +36,14 @@
 
             $('#' + btn.btn_add).click(function () {
                 var index = utils.open({
-                    title: '添加角色',
-                    url: '/sys/role/form',
+                    title: '添加菜单表',
+                    url: '/sys/menuTable/form?menuid=' + utils.getQueryString('id','0'),
                     area: ['600px', '400px']
                 });
             });
 
             $('#' + btn.btn_edit).click(function () {
-                var rows = table.checkStatus(tableId).data;
+                var rows = table.checkStatus();
                 var len = rows.length;
                 if (len < 1) {
                     utils.alert('没有选择任何行');
@@ -61,14 +54,14 @@
                     return;
                 }
                 var index = utils.open({
-                    title: '修改角色',
-                    url: '/sys/role/form?id=' + rows[0].ID,
+                    title: '修改菜单表',
+                    url: '/sys/menuTable/form?id=' + rows[0].ID,
                     area: ['600px', '400px']
                 });
             });
 
             $('#' + btn.btn_delete).click(function () {
-                var rows = table.checkStatus(tableId).data;
+                var rows = table.checkStatus();
                 var len = rows.length;
                 if (len < 1) {
                     utils.alert('没有选择任何行');
@@ -79,48 +72,13 @@
                     $.each(rows, function (i, item) {
                         ids.push(item.ID);
                     });
-                    utils.post('/sys/role/delete', { ids: ids });
-                });
-            });
-
-            $('#' + btn.btn_auth).click(function () {
-                var rows = table.checkStatus(tableId).data;
-                var len = rows.length;
-                if (len < 1) {
-                    utils.alert('没有选择任何行');
-                    return;
-                }
-                else if (len > 1) {
-                    utils.alert('只能选择一行授权');
-                    return;
-                }
-                var index = utils.open({
-                    title: '角色授权',
-                    url: '/sys/role/auth?roleId=' + rows[0].ID,
-                    area: ['650px', '500px']
-                });
-            });
-
-            $('#' + btn.btn_authUser).click(function () {
-                var rows = table.checkStatus(tableId).data;
-                var len = rows.length;
-                if (len < 1) {
-                    utils.alert('没有选择任何行');
-                    return;
-                }
-                else if (len > 1) {
-                    utils.alert('只能选择一行授权用户');
-                    return;
-                }
-                var index = utils.open({
-                    title: '用户授权',
-                    url: '/sys/role/authUser?roleId=' + rows[0].ID,
-                    area: ['650px', '570px']
+                    utils.post('/sys/menuTable/delete', { ids: ids });
                 });
             });
 
             function getParameters() {
-                return { json: $('#txtKey').val() };
+                var json = { MENUID: utils.getQueryString('id','0'), TABLENAME: $('#txtKey').val() };
+                return { json: JSON.stringify(json) };
             }
         });
     </script>

@@ -1,0 +1,114 @@
+﻿<blockquote class="layui-elem-quote">
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            <input type="text" value="" id="txtKey" placeholder="请输入关键字" class="layui-input" />
+        </div>
+        <a class="layui-btn" id="btn-query">查询</a>
+    </div>
+</blockquote>
+<div class="layui-form">
+    <table class="layui-table" id="columnList"></table>
+</div>
+<form class="layui-form" id="form1">
+    <div class="right">
+        <button class="layui-btn" id="btn-sure" type="button">确定</button>
+        <button type="button" class="layui-btn layui-btn-primary" id="btn-cancel">取消</button>
+    </div>
+</form>
+
+@section scripts{
+    <script type="text/javascript">
+        layui.use(['jquery', 'mytable', 'utils'], function () {
+            var $ = layui.jquery, table = layui.mytable, utils = layui.utils, btn = utils.btns;
+
+            var tableId = 'columnList';
+
+            var cols = [
+                   [{ checkbox: true, width: '5%' },
+                   { field: 'MENUNAME', title: '菜单', width: '15%' },
+                   { field: 'TABLENAME', title: '表名', width: '15%' },
+                   { field: 'NAME', title: '列名', width: '15%' },
+                   {
+                       field: 'CONDITIONTYPE', title: '条件类型', width: '15%', content: function (v) {
+                           var value = '';
+                           switch (v) {
+                               case 1:
+                                   value = '等于';
+                                   break;
+                               case 2:
+                                   value = '大于';
+                                   break;
+                               case 3:
+                                   value = '大于等于';
+                                   break;
+                               case 4:
+                                   value = '小于';
+                                   break;
+                               case 5:
+                                   value = '小于等于';
+                                   break;
+                               case 6:
+                                   value = '不等于';
+                                   break;
+                               case 7:
+                                   value = '包含';
+                                   break;
+                           }
+                           return value;
+                       }
+                   },
+                   {
+                       field: 'INPUTTYPE', title: '控件类型', width: '15%', content: function (v) {
+                           var value = '';
+                           switch (v) {
+                               case 1:
+                                   value = '文本框';
+                                   break;
+                               case 2:
+                                   value = '下拉框';
+                                   break;
+                               case 3:
+                                   value = '隐藏文本框';
+                                   break;
+                               case 4:
+                                   value = '日期框';
+                                   break;
+                           }
+                           return value;
+                       }
+                   },
+                   { field: 'FIELDTEXT', title: '控件文本', width: '15%' }
+                   ]
+            ];
+
+            table.render(tableId, '/sys/menuColumn/getColumnList2', cols, getParameters());
+
+            $('#' + btn.btn_query).click(function () {
+                table.reload(tableId, { where: getParameters() });
+            });
+
+            $('#btn-sure').on('click', function () {
+                var rows = table.checkStatus();
+                var len = rows.length;
+                if (len < 1) {
+                    utils.alert('没有选择任何行');
+                    return;
+                }
+                var ids = [];
+                $.each(rows, function (i, item) {
+                    ids.push(item.ID);
+                });
+                utils.post('/sys/menuColumn/addColumns', { pid: utils.getQueryString('id', '0'), cids: ids });
+                return false;
+            });
+
+            $('#btn-cancel').on('click', function () {
+                utils.closeFrame();
+            });
+
+            function getParameters() {
+                return { menuId: utils.getQueryString('id', '0'), key: $('#txtKey').val() };
+            }
+        });
+    </script>
+}

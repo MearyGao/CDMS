@@ -38,8 +38,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
         public ActionResult GetList(LayuiPaginationIn p)
         {
             var result = article.GetList(p);
-            var json = JsonHelper.ToJson(result);
-            return Content(json);
+            return Json(result);
         }
 
         [HttpPost]

@@ -67,11 +67,20 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">排序</label>
-        <div class="layui-input-block">
-            <input type="text" name="SORTID" autocomplete="off" value="100" placeholder="请输入排序" class="layui-input" />
+        <div class="layui-inline">
+            <label class="layui-form-label">显示</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="DISPLAY" checked="checked" value="true" lay-skin="switch" lay-filter="DISPLAY" />
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" name="SORTID" autocomplete="off" value="100" placeholder="请输入排序" class="layui-input" />
+            </div>
         </div>
     </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">描述</label>
         <div class="layui-input-block">
@@ -96,6 +105,10 @@
                 data.field['IMG'] = encodeURIComponent(data.field['IMG']);
                 utils.post('/sys/menu/save', data.field);
                 return false;
+            });
+
+            form.on('switch(DISPLAY)', function (data) {
+                $('input[name="DISPLAY"]').val(data.elem.checked);
             });
 
             $('#cancel').on('click', function () {
@@ -135,7 +148,7 @@
                         var value = $('#IMG').val();
                         $('#i-icon').html(value);
                     }
-                    form.render('select');
+                    form.render();
                 }
             };
             tree.set(treeOption).render();

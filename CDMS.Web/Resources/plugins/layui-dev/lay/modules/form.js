@@ -226,7 +226,8 @@ layui.define('layer', function(exports){
             select.val(value).removeClass('layui-form-danger')
             layui.event.call(this, MOD_NAME, 'select('+ filter +')', {
               elem: select[0]
-              ,value: value
+              , value: value
+              ,text: othis.text()
               ,othis: reElem
             });
 

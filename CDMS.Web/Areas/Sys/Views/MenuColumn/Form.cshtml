@@ -1,0 +1,166 @@
+﻿
+<form class="layui-form" id="form1">
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <select type="text" id="MENUID" name="MENUID" lay-filter="MENUID" autocomplete="off" placeholder="请选择菜单" class="layui-select"></select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">列名<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <select class="layui-select" id="NAME1" lay-filter="NAME1" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">条件类型<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <select type="text" id="CONDITIONTYPE" name="CONDITIONTYPE" class="layui-select" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">控件类型<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <select type="text" id="INPUTTYPE" name="INPUTTYPE" class="layui-select" lay-verify="required">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">控件文本<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="FIELDTEXT" name="FIELDTEXT" autocomplete="off" placeholder="请输入控件文本" class="layui-input" lay-verify="required" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文本值</label>
+        <div class="layui-input-block">
+            <input type="text" id="FIELDVALUE" name="FIELDVALUE" value="" autocomplete="off" placeholder="请输入文本值" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="text" name="SORTID" autocomplete="off" value="100" placeholder="请输入排序" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="save">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary" id="cancel">取消</button>
+            <input type="hidden" name="ID" value="0" />
+            <input type="hidden" name="TYPE" value="1" />
+            <input type="hidden" id="TABLEID" name="TABLEID" />
+            <input type="hidden" id="FIELDTYPE" name="FIELDTYPE" value="0" />
+            <input type="hidden" id="NAME" name="NAME" />
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script type="text/javascript">
+        layui.use(['form', 'myselect', 'treeSelector', 'utils'], function () {
+            var $ = layui.jquery, form = layui.form, utils = layui.utils, mySelect = layui.myselect, tree = layui.treeSelector;
+
+            var options1 = {
+                elem: '#CONDITIONTYPE',
+                data: [{ value: '1', text: '等于' }, { value: '2', text: '大于' }, { value: '3', text: '大于等于' }, { value: '4', text: '小于' }, { value: '5', text: '小于等于' }, { value: '6', text: '不等于' }, { value: '7', text: '包含' }]
+            };
+            mySelect.render(options1);
+
+            var options2 = {
+                elem: '#INPUTTYPE',
+                data: [{ value: '1', text: '文本框' }, { value: '2', text: '下拉框' }, { value: '3', text: '隐藏文本框' }],
+                callback: function () {
+                    renderForm();
+                }
+            };
+            mySelect.render(options2);
+
+            form.on('submit(save)', function (data) {
+                utils.post('/sys/menuColumn/save', { old: getOldObject(), model: data.field });
+                return false;
+            });
+
+            form.on('select(MENUID)', function (data) {
+                var value = data.value;
+                var id = '#NAME1';
+                if (value) {
+                    var options3 = {
+                        elem: id,
+                        append: false,
+                        callback: function () {
+                            renderForm();
+                        },
+                        ajax: {
+                            url: '/sys/menuColumn/getColumnList',
+                            data: { menuId: $('#MENUID').val() }
+                        }
+                    };
+                    mySelect.render(options3);
+                }
+                else {
+                    $(id).html('');
+                    $('#TABLEID').val('');
+                    $('#FIELDTYPE').val('0');
+                    $('#FIELDTEXT').val('');
+                    $('#NAME').val('');
+                    renderForm();
+                }
+            });
+
+            form.on('select(NAME1)', function (data) {
+                var v = data.value;
+                if (v) {
+                    var values = v.split('|');
+                    $('#TABLEID').val(values[0]);
+                    $('#FIELDTYPE').val(values[1]);
+                    $('#FIELDTEXT').val(values[2]);
+                    $('#NAME').val(data.text);
+                }
+                else {
+                    $('#TABLEID').val('');
+                    $('#FIELDTYPE').val('0');
+                    $('#FIELDTEXT').val('');
+                    $('#NAME').val('');
+                }
+            });
+
+            $('#cancel').on('click', function () {
+                utils.closeFrame();
+            });
+
+            var json = '@Html.Raw(ViewBag.Json)';
+            var treeOption = {
+                type: 'remote',
+                url: '/sys/menu/getTreeSelectList',
+                selector: '#MENUID',
+                repeatString: '&nbsp;&nbsp;',
+                preString: '',
+                callback: function () {
+                    if (json && json.length > 0) {
+                        var model = utils.setFormData(json);
+                        $('#NAME1').append('<option value="1">' + model['NAME'] + '</option>').val('1');
+                    }
+                    renderForm();
+                }
+            };
+            tree.set(treeOption).render();
+
+            function getOldObject() {
+                if (json && json.length > 0) {
+                    return JSON.parse(json);
+                }
+                return null;
+            }
+
+            function renderForm(s) {
+                form.render(s || 'select');
+            }
+        });
+    </script>
+}

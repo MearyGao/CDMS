@@ -57,8 +57,8 @@ namespace CDMS.Web.Areas.Sys.Controllers
         public ActionResult Button()
         {
             string url = HttpContext.Request.Path.ToLower();
-            var buttons = menuService.GetAuthMenuList(url, MenuType.Button);
-            return PartialView(buttons);
+            var model = menuService.GetAuthMenuList(url, MenuType.Button);
+            return PartialView(model);
         }
 
         [HttpPost]

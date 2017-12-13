@@ -48,6 +48,7 @@
     <Compile Include="Sys\DevelopLogService.cs" />
     <Compile Include="Sys\ImageService.cs" />
     <Compile Include="Sys\LogService.cs" />
+    <Compile Include="Sys\MenuColumnService.cs" />
     <Compile Include="Sys\MenuService.cs" />
     <Compile Include="Sys\MenuTableService.cs" />
     <Compile Include="Sys\RoleService.cs" />

@@ -41,15 +41,5 @@ namespace CDMS.Web.Controllers
                 return Json(image);
             }
         }
-
-        public ActionResult TEST()
-        {
-            return View();
-        }
-
-        public ActionResult TEST2()
-        {
-            return Content("test2");
-        }
     }
 }

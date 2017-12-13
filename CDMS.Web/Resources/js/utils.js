@@ -19,7 +19,9 @@ layui.define(['layer'], function (exports) {
             btn_delete: 'btn-delete',//删除
             btn_button: 'btn-button',//分配按钮
             btn_auth: 'btn-auth',//角色授权
-            btn_authUser: 'btn-authUser'//授权用户
+            btn_authUser: 'btn-authUser',//授权用户
+            btn_table: 'btn-table',//设置表名
+            btn_column: 'btn-column'//设置列
         },
         /**
          * 根据一个html内容读取出body标签里的文本
@@ -272,15 +274,14 @@ layui.define(['layer'], function (exports) {
             });
         },
 
-        getFormData: function (doc) {
-            var array = $(doc).find('form').not('.ignore').find('input,select,textarea').serializeArray();
+        getFormData: function (doc) {//find('form')
+            var array = $(doc).not('.ignore').find('input,select,textarea').serializeArray();
             var data = {};
             $.each(array, function (i, item) {
                 data[item.name] = item.value;
             });
             return data;
         },
-
         setFormData: function (json, selector) {
             selector = selector || 'form';
             var data;
@@ -294,7 +295,7 @@ layui.define(['layer'], function (exports) {
                 if (input.length < 1) input = form.find('[name="' + key + '"]');
                 if (input.length < 1) continue;
                 var v = input.attr('id') || input.attr('name');
-                if (!v) return;
+                if (!v) continue;
 
                 var type = input.attr('type');
                 var value = $.trim(data[key]).replace(/&nbsp;/g, '');
@@ -315,7 +316,7 @@ layui.define(['layer'], function (exports) {
                         tagFlag = false;
                         break;
                 }
-                if (tagFlag) return;
+                //if (tagFlag) return;
                 switch (type) {
                     case 'radio':
                     case "checkbox":
@@ -338,6 +339,7 @@ layui.define(['layer'], function (exports) {
                         break;
                 }
             }
+            return data;
         },
         formatDate: function (v, format) {
             if (!v) return "";
@@ -367,7 +369,13 @@ layui.define(['layer'], function (exports) {
             }
             return format;
         },
-
+        getQueryString: function (key, dv) {
+            var result = location.search.match(new RegExp("[\?\&]" + key + "=([^\&]+)", "i"));
+            if (result == null || result.length < 1) {
+                return dv || '';
+            }
+            return result[1];
+        },
         skin: {
             skinCookieName: 'CDMS_UI',
             setSkin: function (value) {

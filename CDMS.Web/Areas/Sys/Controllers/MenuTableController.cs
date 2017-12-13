@@ -50,9 +50,16 @@ namespace CDMS.Web.Areas.Sys.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetList(int[] ids)
+        public ActionResult Delete(int[] ids)
         {
             var result = table.Delete(ids);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public ActionResult GetTableList(string dbKey)
+        {
+            var result = table.GetTableList(dbKey);
             return Json(result);
         }
     }

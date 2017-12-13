@@ -1832,6 +1832,27 @@
     //减去一天，得到当前月最后一天
     return new Date(thisDate.getTime() - 1000*60*60*24).getDate();
   };
+
+   //add by roc
+  laydate.init = function () {
+      var that = this, errorTips = 'Table element property lay-data configuration item has a syntax error: ';
+      var elemDates = lay('.layui-date[lay-data]');
+      if (elemDates.length > 0) {
+          lay.each(elemDates, function (i, item) {
+              var date = lay(item);
+              var settings_data = date.attr('lay-data');
+              var settings = {};
+              try {
+                  settings = new Function('return ' + settings_data)();
+              }
+              catch (e) {
+                  hint.error(errorTips + settings_data)
+              }
+              laydate.render(settings);
+          });
+      }
+      return that;
+  };
   
   //暴露lay
   window.lay = window.lay || lay;
@@ -1840,7 +1861,8 @@
   isLayui ? (
     laydate.ready()
     ,layui.define(function(exports){ //layui加载
-      laydate.path = layui.cache.dir;
+        laydate.path = layui.cache.dir;
+        laydate.init();
       exports(MOD_NAME, laydate);
     })
   ) : (
