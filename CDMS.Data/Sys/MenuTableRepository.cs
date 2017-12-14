@@ -41,15 +41,19 @@ namespace CDMS.Data
             var menuSql = sql.Join<Menu>((t, s) => t.MENUID == s.ID, aliasName: "b");
             menuSql.Select(m => m.NAME);
 
-            MenuTable table = p.json.ToObject<MenuTable>();
-            if (table != null)
-            {
-                if (table.MENUID > 0) sql.And(m => m.MENUID == table.MENUID);
-                if (!table.TABLENAME.IsEmpty())
-                {
-                    sql.And(m => m.TABLENAME.Contains(table.TABLENAME));
-                }
-            }
+            //MenuTable table = p.json.ToObject<MenuTable>();
+            //if (table != null)
+            //{
+            //    if (table.MENUID > 0) sql.And(m => m.MENUID == table.MENUID);
+            //    if (!table.TABLENAME.IsEmpty())
+            //    {
+            //        sql.And(m => m.TABLENAME.Contains(table.TABLENAME));
+            //    }
+            //}
+            Dictionary<string, object> dic;
+            string condition = ToSql(p.json, out dic);
+            sql.And(condition);
+            sql.AddParameters(dic);
 
             sql.OrderBy(m => m.MENUID, m => m.SORTID);
 

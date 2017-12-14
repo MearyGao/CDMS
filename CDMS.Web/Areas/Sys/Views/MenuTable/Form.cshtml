@@ -15,15 +15,21 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">表名<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <select type="text" id="TABLENAME1" class="layui-select" lay-filter="dbtName" lay-verify="required"></select>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">架构<span class="red">*</span></label>
         <div class="layui-input-block">
             <input type="text" id="SCHEMANAME" name="SCHEMANAME" placeholder="请选择表名" class="layui-input" lay-verify="required" readonly="readonly" />
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">表名<span class="red">*</span></label>
+        <label class="layui-form-label">别名</label>
         <div class="layui-input-block">
-            <select type="text" id="TABLENAME1" class="layui-select" lay-filter="dbtName" lay-verify="required"></select>
+            <input type="text" id="ALIASNAME" name="ALIASNAME" placeholder="请输入别名" class="layui-input" value="a" />
         </div>
     </div>
     <div class="layui-form-item">

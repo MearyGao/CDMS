@@ -1,0 +1,24 @@
+﻿@using CDMS.Entity
+@{
+    var model = Model as MySelect;
+    var list = model.List;
+    string name = model.Name;
+    var dv = model.Default;
+    string layVerify = model.LayVerify;
+    string filter = model.LayFilter;
+    if (dv == null)
+    {
+        dv = new KeyValue("请选择", "");
+    }
+}
+<select type="text" id="@name" name="@name" autocomplete="off" class="layui-select" lay-verify="@layVerify" lay-filter="@filter">
+    <option value="@dv.Value">@dv.Text</option>
+    @if (list != null && list.Count() > 0)
+    {
+        foreach (var item in list)
+        {
+            string value = model.ValueIsText ? item.Text : item.Value;
+            <option value="@value">@item.Text</option>
+        }
+    }
+</select>

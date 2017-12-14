@@ -271,6 +271,7 @@
     <Compile Include="Areas\Sys\Controllers\ArticleController.cs" />
     <Compile Include="Areas\Sys\Controllers\ButtonController.cs" />
     <Compile Include="Areas\Sys\Controllers\CategoryController.cs" />
+    <Compile Include="Areas\Sys\Controllers\DictionaryController.cs" />
     <Compile Include="Areas\Sys\Controllers\ImageController.cs" />
     <Compile Include="Areas\Sys\Controllers\LogController.cs" />
     <Compile Include="Areas\Sys\Controllers\MenuColumnController.cs" />
@@ -343,6 +344,9 @@
     <Content Include="Areas\Sys\Views\MenuColumn\Index.cshtml" />
     <Content Include="Areas\Sys\Views\MenuColumn\Form.cshtml" />
     <Content Include="Areas\Sys\Views\MenuColumn\List.cshtml" />
+    <Content Include="Areas\Sys\Views\Dictionary\Form.cshtml" />
+    <Content Include="Areas\Sys\Views\Dictionary\Index.cshtml" />
+    <Content Include="Views\Shared\MySelect.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

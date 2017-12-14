@@ -42,13 +42,16 @@
   <ItemGroup>
     <Compile Include="Attributes\ColumnAttribute.cs" />
     <Compile Include="Attributes\TableAttribute.cs" />
+    <Compile Include="Common\KeyValue.cs" />
     <Compile Include="Common\LayuiPaginationIn.cs" />
     <Compile Include="Common\LayuiPaginationOut.cs" />
     <Compile Include="Common\LayuiUploadImageOut.cs" />
+    <Compile Include="Common\MySelect.cs" />
     <Compile Include="Sys\Article.cs" />
     <Compile Include="Sys\Button.cs" />
     <Compile Include="Common\ServiceConst.cs" />
     <Compile Include="Sys\Category.cs" />
+    <Compile Include="Sys\Dictionary.cs" />
     <Compile Include="Sys\Extend\ActionType.cs" />
     <Compile Include="Sys\Extend\AuthMenu.cs" />
     <Compile Include="Sys\Extend\DevelopLog.cs" />

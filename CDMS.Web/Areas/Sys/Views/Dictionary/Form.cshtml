@@ -1,0 +1,75 @@
+﻿@using CDMS.Entity
+@{
+    IEnumerable<KeyValue> values = Model;
+}
+
+<form class="layui-form" id="form1">
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型<span class="red">*</span></label>
+        <div class="layui-input-block">
+            @Html.Partial("MySelect", new MySelect("TYPE", values, verify: "required"))
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">编码</label>
+        <div class="layui-input-block"><input type="text" name="CODE" autocomplete="off" placeholder="请输入编码" class="layui-input" /></div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文本<span class="red">*</span></label>
+        <div class="layui-input-block"><input type="text" name="TEXT" autocomplete="off" lay-verify="required" placeholder="请输入文本" class="layui-input" /></div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">值<span class="red">*</span></label>
+        <div class="layui-input-block"><input type="text" name="VALUE" autocomplete="off" lay-verify="required" placeholder="请输入值" class="layui-input" /></div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="text" name="SORTID" autocomplete="off" placeholder="请输入排序" value="100" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea type="text" name="REMARK" autocomplete="off" placeholder="请输入备注" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="save">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary" id="cancel">取消</button>
+            <input type="hidden" name="ID" value="0" />
+        </div>
+    </div>
+</form>
+@section scripts{
+    <script type="text/javascript">
+        layui.use(['form', 'utils'], function () {
+            var $ = layui.jquery, form = layui.form, utils = layui.utils;
+
+            form.on('submit(save)', function (data) {
+                utils.post('/sys/Dictionary/save', { old: getOldObject(), model: data.field });
+                return false;
+            });
+
+            $('#cancel').on('click', function () {
+                utils.closeFrame();
+            });
+
+            var json = '@Html.Raw(ViewBag.Json)';
+            if (json && json.length > 0) {
+                utils.setFormData(json);
+                form.render('select');
+            }
+
+            function getOldObject() {
+                if (json && json.length > 0) {
+                    return JSON.parse(json);
+                }
+                return null;
+            }
+        });
+    </script>
+}
+
+

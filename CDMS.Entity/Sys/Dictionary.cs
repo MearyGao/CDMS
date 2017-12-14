@@ -5,8 +5,8 @@ using System.Text;
 
 namespace CDMS.Entity
 {
-    [Table("SYS_MENUTABLE")]
-    public class MenuTable
+    [Table("SYS_DICTIONARY")]
+    public class Dictionary
     {
         /// <summary>
         ///ID
@@ -14,29 +14,33 @@ namespace CDMS.Entity
         [Column(true)]
         public int ID { get; set; }
         /// <summary>
-        ///MENUID
+        ///TYPE
         /// </summary>
-        public int MENUID { get; set; }
+        public string TYPE { get; set; }
         /// <summary>
-        ///数据库名称
+        /// code
         /// </summary>
-        public string DBNAME { get; set; }
+        public string CODE { get; set; }
         /// <summary>
-        ///表名
+        ///TEXT
         /// </summary>
-        public string TABLENAME { get; set; }
+        public string TEXT { get; set; }
         /// <summary>
-        ///架构名
+        ///VALUE
         /// </summary>
-        public string SCHEMANAME { get; set; }
+        public string VALUE { get; set; }
         /// <summary>
-        /// 别名
+        ///REMARK
         /// </summary>
-        public string ALIASNAME { get; set; }
+        public string REMARK { get; set; }
         /// <summary>
-        ///排序ID
+        ///SORTID
         /// </summary>
         public int SORTID { get; set; }
+        /// <summary>
+        ///ENABLED
+        /// </summary>
+        public bool ENABLED { get; set; }
         /// <summary>
         ///CREATEBY
         /// </summary>
@@ -53,9 +57,5 @@ namespace CDMS.Entity
         ///UPDATEDATE
         /// </summary>
         public DateTime UPDATEDATE { get; set; }
-        /// <summary>
-        ///ENABLED
-        /// </summary>
-        public bool ENABLED { get; set; }
     }
 }

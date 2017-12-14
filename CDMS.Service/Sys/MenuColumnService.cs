@@ -25,6 +25,13 @@ namespace CDMS.Service
         MenuColumn Get(int id);
 
         /// <summary>
+        /// 查询列信息
+        /// </summary>
+        /// <param name="columnId"></param>
+        /// <returns></returns>
+        dynamic GetColumn(int columnId);
+
+        /// <summary>
         /// 获得列列表
         /// </summary>
         /// <param name="menuId"></param>
@@ -93,6 +100,11 @@ namespace CDMS.Service
             return columnRep.GetEntity(m => m.ID == id && m.ENABLED == true);
         }
 
+        public dynamic GetColumn(int columnId)
+        {
+            return columnRep.GetColumn(columnId);
+        }
+
         public AjaxResult GetColumnList(int menuId)
         {
             var list = columnRep.GetColumnList(menuId);
@@ -101,7 +113,7 @@ namespace CDMS.Service
                 var tempList = from item in list
                                select new
                                {
-                                   text = item.COLUMNNAME,
+                                   text = string.Format("[{0}].[{1}]", item.TABLENAME, item.COLUMNNAME),
                                    value = string.Format("{0}|{1}|{2}", item.TABLEID, item.COLUMNTYPE, item.COLUMNTEXT)
                                };
                 return new AjaxResult(true, data: tempList);

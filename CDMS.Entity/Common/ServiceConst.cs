@@ -16,5 +16,10 @@ namespace CDMS.Entity
         /// 菜单列表缓存
         /// </summary>
         public static readonly string MenuColumnListCache = "MenuColumnList";
+
+        /// <summary>
+        /// 字典表缓存key
+        /// </summary>
+        public static readonly string DictionaryListCache = "DictionaryList";
     }
 }

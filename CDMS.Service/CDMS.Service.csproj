@@ -46,6 +46,7 @@
     <Compile Include="Sys\ButtonService.cs" />
     <Compile Include="Sys\CategoryService.cs" />
     <Compile Include="Sys\DevelopLogService.cs" />
+    <Compile Include="Sys\DictionaryService.cs" />
     <Compile Include="Sys\ImageService.cs" />
     <Compile Include="Sys\LogService.cs" />
     <Compile Include="Sys\MenuColumnService.cs" />

@@ -88,7 +88,8 @@ namespace CDMS.Service
                     m.DBNAME,
                     m.TABLENAME,
                     m.SCHEMANAME,
-                    m.SORTID
+                    m.SORTID,
+                    m.ALIASNAME
                 }, m => m.ID == model.ID);
 
                 ActionType type = ActionType.SYS_UPDATE;

@@ -45,6 +45,7 @@
     <Compile Include="Sys\ArticleRepository.cs" />
     <Compile Include="Sys\ButtonRepository.cs" />
     <Compile Include="Sys\CategoryRepository.cs" />
+    <Compile Include="Sys\DictionaryRepository.cs" />
     <Compile Include="Sys\ImageRepository.cs" />
     <Compile Include="Sys\LogRepository.cs" />
     <Compile Include="Sys\MenuColumnRepository.cs" />

@@ -425,10 +425,12 @@ namespace CDMS.Data
                 {
                     object value = dic[column.NAME];
                     if (value == null || value.ToString().IsEmpty()) continue;
-                    sb.AppendFormat("{0} {1} @{0}", column.NAME, GetSqlOperation(column.CONDITIONTYPE));
                     if (index > 0) sb.Append(" AND ");
+                    string pkey = string.Format("{0}_{1}", column.ALIASNAME, column.NAME);
+                    sb.AppendFormat("[{0}].[{1}] {2} @{3}", column.ALIASNAME, column.NAME, GetSqlOperation(column.CONDITIONTYPE), pkey);
+
                     if (column.CONDITIONTYPE == 7) value = string.Format("%{0}%", value.ToString());
-                    parameters.Add(column.NAME, value);
+                    parameters.Add(pkey, value);
                     index++;
                 }
             }
@@ -469,16 +471,20 @@ namespace CDMS.Data
             return value;
         }
 
-        private IEnumerable<MenuColumn> GetMenuColumns()
+        private IEnumerable<dynamic> GetMenuColumns()
         {
             string key = ServiceConst.MenuColumnListCache;
-            var list = CacheHelper.Get<IEnumerable<MenuColumn>>(key);
+            var list = CacheHelper.Get<IEnumerable<dynamic>>(key);
             if (list == null || list.Count() < 1)
             {
                 var columnSql = this.GetSqlLam<MenuColumn>();
                 columnSql.Where(m => m.ENABLED == true);
                 columnSql.SelectAll();
-                list = this.GetList<MenuColumn>(columnSql.GetSql(), columnSql.GetParameters());
+
+                var tableSql = columnSql.Join<MenuTable>((c, t) => c.TABLEID == t.ID, aliasName: "b");
+                tableSql.Select(m => new { m.ALIASNAME });
+
+                list = this.GetDynamicList(columnSql.GetSql(), columnSql.GetParameters());
 
                 CacheHelper.Add(key, list);
             }

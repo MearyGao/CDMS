@@ -1,0 +1,102 @@
+﻿@using CDMS.Entity
+@{
+    IEnumerable<KeyValue> values = Model;
+}
+
+<form id="form1" class="layui-form">
+    <blockquote class="layui-elem-quote">
+        <div class="layui-inline">
+            类型：
+            <div class="layui-input-inline">
+                @Html.Partial("MySelect", new MySelect("TYPE", values))
+            </div>
+            编码：
+            <div class="layui-input-inline">
+                <input type="text" value="" id="CODE" placeholder="请输入编码" class="layui-input" />
+            </div>
+            关键字：
+            <div class="layui-input-inline">
+                <input type="text" value="" id="VALUE" placeholder="请输入关键字" class="layui-input" />
+            </div>
+            <a class="layui-btn search_btn" id="btn-query">查询</a>
+        </div>
+        @Html.Action("button", "menu")
+    </blockquote>
+</form>
+
+<div class="layui-form">
+    <table class="layui-table" id="dictionarylist"></table>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        layui.use(['jquery', 'mytable', 'utils'], function () {
+            var $ = layui.jquery, table = layui.mytable, utils = layui.utils, btn = utils.btns;
+            var tableId = 'dictionarylist';
+            var cols = [
+                [{ checkbox: true, width: '5%' },
+                { field: 'ID', title: '字典ID', width: '10%' },
+                { field: 'PTEXT', title: '类型', width: '10%' },
+                { field: 'CODE', title: '编码', width: '10%' },
+                { field: 'TEXT', title: '文本', width: '10%' },
+                { field: 'VALUE', title: '值', width: '10%' },
+                { field: 'REMARK', title: '备注', width: '15%' },
+                { field: 'SORTID', title: '排序', width: '10%' }
+                ]
+            ];
+
+            table.render(tableId, '/sys/dictionary/getList', cols, getParameters());
+
+            $('#' + btn.btn_query).click(function () {
+                table.reload({ where: getParameters() });
+            });
+
+            $('#' + btn.btn_add).click(function () {
+                var index = utils.open({
+                    title: '添加字典',
+                    url: '/sys/Dictionary/form',
+                    area: ['600px', '500px']
+                });
+            });
+
+            $('#' + btn.btn_edit).click(function () {
+                var rows = table.checkStatus(tableId).data;
+                var len = rows.length;
+                if (len < 1) {
+                    utils.alert('没有选择任何行');
+                    return;
+                }
+                else if (len > 1) {
+                    utils.alert('只能选择一行修改');
+                    return;
+                }
+                var index = utils.open({
+                    title: '修改字典',
+                    url: '/sys/dictionary/form?id=' + rows[0].ID,
+                    area: ['600px', '500px']
+                });
+            });
+
+            $('#' + btn.btn_delete).click(function () {
+                var rows = table.checkStatus(tableId).data;
+                var len = rows.length;
+                if (len < 1) {
+                    utils.alert('没有选择任何行');
+                    return;
+                }
+                utils.confirm('确实要删除选择行吗?', function () {
+                    var ids = [];
+                    $.each(rows, function (i, item) {
+                        ids.push(item.ID);
+                    });
+                    utils.post('/sys/dictionary/delete', { ids: ids });
+                });
+            });
+
+            function getParameters() {
+                var json = JSON.stringify(utils.getFormData(document.body));
+                return { json: json };
+            }
+        })
+    </script>
+}
+

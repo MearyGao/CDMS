@@ -74,7 +74,7 @@
 
             var options2 = {
                 elem: '#INPUTTYPE',
-                data: [{ value: '1', text: '文本框' }, { value: '2', text: '下拉框' }, { value: '3', text: '隐藏文本框' }],
+                data: [{ value: '1', text: '文本框' }, { value: '2', text: '下拉框' }, { value: '3', text: '隐藏文本框' }, { value: '4', text: '日期框' }],
                 callback: function () {
                     renderForm();
                 }
@@ -144,7 +144,7 @@
                 callback: function () {
                     if (json && json.length > 0) {
                         var model = utils.setFormData(json);
-                        $('#NAME1').append('<option value="1">' + model['NAME'] + '</option>').val('1');
+                        $('#NAME1').append('<option value="1">[' + model['TABLENAME'] + '].[' + model['NAME'] + ']</option>').val('1');
                     }
                     renderForm();
                 }

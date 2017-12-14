@@ -32,6 +32,13 @@ namespace CDMS.Data
         IEnumerable<dynamic> GetColumnList(int menuId, string key);
 
         /// <summary>
+        /// 查询列信息
+        /// </summary>
+        /// <param name="columnId"></param>
+        /// <returns></returns>
+        dynamic GetColumn(int columnId);
+
+        /// <summary>
         /// 添加菜单列
         /// </summary>
         /// <param name="pid"></param>
@@ -61,13 +68,17 @@ namespace CDMS.Data
 
             sql.Where(m => m.ENABLED == true);
 
-            var model = p.json.ToObject<MenuColumn>();
-            if (model != null)
-            {
-                if (model.MENUID > 0) sql.And(m => m.MENUID == model.MENUID);
-                if (model.TABLEID > 0) sql.And(m => m.TABLEID == m.TABLEID);
-                if (!model.NAME.IsEmpty()) sql.And(m => m.NAME.Contains(model.NAME));
-            }
+            //var model = p.json.ToObject<MenuColumn>();
+            //if (model != null)
+            //{
+            //    if (model.MENUID > 0) sql.And(m => m.MENUID == model.MENUID);
+            //    if (model.TABLEID > 0) sql.And(m => m.TABLEID == m.TABLEID);
+            //    if (!model.NAME.IsEmpty()) sql.And(m => m.NAME.Contains(model.NAME));
+            //}
+            Dictionary<string, object> dic;
+            string condition = ToSql(p.json, out dic);
+            sql.And(condition);
+            sql.AddParameters(dic);
 
             sql.OrderBy(m => m.MENUID, m => m.SORTID);
 
@@ -142,6 +153,15 @@ WHERE b.ENABLED=1 AND a.ID IS NOT NULL ";
 SELECT FIELDTEXT,4,{0},1,ID,SORTID,'{1}',GETDATE(),'{1}',GETDATE(),1 FROM dbo.SYS_MENUCOLUMN WHERE ID IN({2})", pid, uid, string.Join(",", cids));
                 base.Execute(sqlText, null);
             });
+        }
+
+        public dynamic GetColumn(int columnId)
+        {
+            sql.SelectAll();
+            sql.Where(m => m.ENABLED == true && m.ID == columnId);
+            var tableSql = sql.Join<MenuTable>((c, t) => c.TABLEID == t.ID && c.MENUID == t.MENUID, aliasName: "b");
+            tableSql.Select(m => m.TABLENAME);
+            return GetDynamicList(sql.GetSql(), sql.GetParameters()).FirstOrDefault();
         }
     }
 }

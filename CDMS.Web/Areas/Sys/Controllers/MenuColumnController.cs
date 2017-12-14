@@ -28,7 +28,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
             int columnId = id.HasValue ? id.Value : 0;
             if (columnId > 0)
             {
-                var model = column.Get(columnId);
+                var model = column.GetColumn(columnId);
                 ViewBag.Json = JsonHelper.ToJson(model);
             }
             return View();
