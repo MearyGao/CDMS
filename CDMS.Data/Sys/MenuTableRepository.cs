@@ -66,7 +66,12 @@ namespace CDMS.Data
         {
             base.ChangeDb(dbKey);
 
-            string sqlText = @"SELECT a.name AS TABLENAME,b.name AS SCHEMANAME FROM sys.objects AS a LEFT JOIN sys.schemas AS b ON a.schema_id=b.schema_id WHERE type='u' ORDER BY a.name";
+            string sqlText = @"SELECT a.name AS TABLENAME,b.name AS SCHEMANAME FROM(
+SELECT a.name,a.object_id,a.schema_id,'表' AS TYPE FROM sys.tables AS a 
+UNION ALL
+SELECT b.name,b.object_id,b.schema_id,'视图' AS TYPE  FROM sys.views AS b
+) AS a LEFT JOIN sys.schemas AS b ON a.schema_id=b.schema_id
+ORDER BY a.name";
 
             return base.GetDynamicList(sqlText, null);
         }

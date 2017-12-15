@@ -32,7 +32,19 @@
                 }
                 else if (type == 4)
                 {
-                    string layData = "{" + string.Format("elem:'#{0}'", name) + "}";
+                    string layDateType = "date";
+                    string value = "";
+                    string fvalue = item.FIELDVALUE;
+                    if (!string.IsNullOrEmpty(fvalue))
+                    {
+                        string[] vs = fvalue.Split('|');
+                        value = vs[0];
+                        if (vs.Length > 1)
+                        {
+                            layDateType = vs[1];
+                        }
+                    }
+                    string layData = "{" + string.Format("elem:'#{0}', value: {1} , type: '{2}'", name, value, layDateType) + "}";
                     <input type="text" id="@name" name="@name" placeholder="@holder" class="layui-input layui-date" lay-data="@layData" />
                 }
                 <input type="hidden" name="@idname" value="@item.ID" />

@@ -111,7 +111,8 @@
                 preString: '',
                 callback: function () {
                     if (json && json.length > 0) {
-                        utils.setFormData(json);
+                        var model = utils.setFormData(json);
+                        $('#TABLENAME1').append('<option>' + model['TABLENAME'] + '</option>');
                     }
                     renderForm();
                 }
