@@ -405,7 +405,7 @@ namespace CDMS.Data
             parameters = new Dictionary<string, object>();
             if (json.IsEmpty()) return string.Empty;
 
-            var list = GetMenuColumns();
+            var list = GetMenuColumns(MenuColumnType.CONDITION);
 
             if (list == null || list.Count() < 0) return string.Empty;
 
@@ -417,14 +417,13 @@ namespace CDMS.Data
                 if (item.Value == null || item.Value.ToString().IsEmpty()) continue;
                 string key = item.Key;
                 string[] keys = key.Split('|');
-                if (keys[0] != "ID" || keys.Length < 2) continue;
+                if (keys == null || keys.Length != 2) continue;
 
-                int id = item.Value.ToString().ToInt();
+                int id = keys[1].ToInt();
                 var column = list.FirstOrDefault(m => m.ID == id);
                 if (column != null)
                 {
-                    object value = dic[column.NAME];
-                    if (value == null || value.ToString().IsEmpty()) continue;
+                    object value = item.Value;
                     if (index > 0) sb.Append(" AND ");
                     string pkey = string.Format("{0}_{1}", column.ALIASNAME, column.NAME);
                     sb.AppendFormat("[{0}].[{1}] {2} @{3}", column.ALIASNAME, column.NAME, GetSqlOperation(column.CONDITIONTYPE), pkey);
@@ -436,6 +435,7 @@ namespace CDMS.Data
             }
             return sb.ToString();
         }
+
 
         private string GetSqlOperation(int type)
         {
@@ -471,7 +471,7 @@ namespace CDMS.Data
             return value;
         }
 
-        private IEnumerable<dynamic> GetMenuColumns()
+        private IEnumerable<dynamic> GetMenuColumns(MenuColumnType ctype)
         {
             string key = ServiceConst.MenuColumnListCache;
             var list = CacheHelper.Get<IEnumerable<dynamic>>(key);
@@ -490,7 +490,7 @@ namespace CDMS.Data
             }
             if (list != null)
             {
-                int type = (int)MenuColumnType.CONDITION;
+                int type = (int)ctype;
                 list = list.Where(m => m.TYPE == type);
             }
             return list;

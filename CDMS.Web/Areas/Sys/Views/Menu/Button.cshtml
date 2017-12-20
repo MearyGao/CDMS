@@ -10,30 +10,30 @@
     int mid = columns.FirstOrDefault().MENUID;
     foreach (var item in columns)
     {
-        string name = item.NAME;
+        string id = item.NAME;
+        string name = string.Format("{0}|{1}", item.NAME, item.ID);
         int type = item.INPUTTYPE;
         string holder = string.Format("请输入{0}", item.FIELDTEXT);
         string hiddenClass = type == 3 ? "hidden" : "";
-        string idname = string.Format("ID|{0}", name);
         <div class="layui-inline @hiddenClass">
-            @item.FIELDTEXT
+            <label class="layui-form-label">@item.FIELDTEXT</label>
             <div class="layui-input-inline">
                 @if (type == 1)
                 {
-                    <input type="text" id="@name" name="@name" placeholder="@holder" class="layui-input" />
+                    <input type="text" id="@id" name="@name" placeholder="@holder" class="layui-input" />
                 }
                 else if (type == 2)
                 {
-                    <select id="@name" name="@name" class="layui-select"></select>
+                    <select id="@id" name="@name" class="layui-select"></select>
                 }
                 else if (type == 3)
                 {
-                    <input type="hidden" id="@name" name="@name" value="@item.FIELDVALUE" />
+                    <input type="hidden" id="@id" name="@name" value="@item.FIELDVALUE" />
                 }
                 else if (type == 4)
                 {
                     string layDateType = "date";
-                    string value = "";
+                    string value = "''";
                     string fvalue = item.FIELDVALUE;
                     if (!string.IsNullOrEmpty(fvalue))
                     {
@@ -44,10 +44,10 @@
                             layDateType = vs[1];
                         }
                     }
-                    string layData = "{" + string.Format("elem:'#{0}', value: {1} , type: '{2}'", name, value, layDateType) + "}";
-                    <input type="text" id="@name" name="@name" placeholder="@holder" class="layui-input layui-date" lay-data="@layData" />
+                    string layData = "{" + string.Format("elem:'#{0}', value: {1} , type: '{2}'", id, value, layDateType) + "}";
+                    <input type="text" id="@id" name="@name" placeholder="@holder" class="layui-input layui-date" lay-data="@layData" />
                 }
-                <input type="hidden" name="@idname" value="@item.ID" />
+                @*<input type="hidden" name="@idname" value="@item.ID" />*@
             </div>
         </div>
     }
