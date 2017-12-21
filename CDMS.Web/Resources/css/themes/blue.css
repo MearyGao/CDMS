@@ -37,3 +37,6 @@ background-color:#00c0ef;
 border-color:#00c0ef;
 }
 
+.layui-btn-primary:hover {
+border-color:#00c0ef;
+}

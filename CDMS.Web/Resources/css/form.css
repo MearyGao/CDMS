@@ -17,3 +17,23 @@
 .right {
     text-align: right;
 }
+
+.layui-form-label {
+    padding: 9px 5px;
+}
+
+.layui-table-cell {
+    height: auto;
+}
+
+.layui-input-block {
+    margin-left: 90px;
+}
+
+.layui-form-item {
+    margin: 5px 0px;
+}
+
+.layui-btn-danger {
+    background-color: #FF5722 !important;
+}

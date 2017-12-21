@@ -152,51 +152,6 @@ namespace CDMS.Service
             return new AjaxResult(logout, msg);
         }
 
-        private string GetEID(string eid)
-        {
-            if (eid.IndexOf(@"\") <= 0)
-            {
-                bool flag = System.Text.RegularExpressions.Regex.IsMatch(eid, @"^[\d]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                if (!flag) eid = string.Format(@"AP\{0}", eid);
-            }
-            return eid;
-        }
-
-        /// <summary>
-        /// 获得验证错误信息
-        /// </summary>
-        /// <param name="code">错误代码</param>
-        /// <returns></returns>
-        private string GetValidationMsg(string code)
-        {
-            string error = string.Empty;
-            switch (code)
-            {
-                case "DomainAccountNotFound":
-                    error = "域帐号未找到";
-                    break;
-                case "WWIDNotFound":
-                    error = "WWID未找到";
-                    break;
-                case "WrongPassword":
-                    error = "密码错误";
-                    break;
-                case "WWIDForbidden":
-                    error = "WWID验证失败次数过多";
-                    break;
-                case "DomainAccountForbidden":
-                    error = "域帐号验证失败次数过多";
-                    break;
-                case "IPForbidden":
-                    error = "IP验证失败次数过多";
-                    break;
-                case "NoAuthority":
-                    error = "客户端IP未被授权";
-                    break;
-            }
-            return error;
-        }
-
         public AjaxResult Save(User user)
         {
             bool addFlag = user.ID < 1;
@@ -247,6 +202,11 @@ namespace CDMS.Service
 
         public AjaxResult Delete(int[] userIds)
         {
+            var user = this.GetCurrent();
+            if (userIds.Contains(user.ID))
+            {
+                return new AjaxResult(false, "不能将当前用户删除");
+            }
             bool flag = userRep.Delete(userIds);
             return new AjaxResult(flag, flag ? "用户删除成功" : "用户删除失败");
         }
@@ -299,7 +259,5 @@ namespace CDMS.Service
                 return new AjaxResult(false, "上传失败" + e.Message);
             }
         }
-
-
     }
 }

@@ -9,7 +9,7 @@ using CDMS.Service;
 
 namespace CDMS.Web.Areas.Sys.Controllers
 {
-    public class ArticleController : Controller
+    public class ArticleController : BaseController
     {
         readonly IArticleService article;
 

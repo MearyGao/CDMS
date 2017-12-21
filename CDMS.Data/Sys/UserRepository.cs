@@ -39,11 +39,19 @@ namespace CDMS.Data
         /// <returns></returns>
         User IsLogin(string loginKey);
 
-
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         LayuiPaginationOut GetList(LayuiPaginationIn p);
 
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         bool Delete(int[] ids);
-
     }
 
     public class UserRepository : RepositoryBase<User>, IUserRepository
@@ -116,6 +124,7 @@ namespace CDMS.Data
             var list = base.GetPageList(p);
             return new LayuiPaginationOut(p, list);
         }
+
         public bool Delete(int[] ids)
         {
             sql.In(m => m.ID, ids);
@@ -125,6 +134,5 @@ namespace CDMS.Data
             int count = base.Execute(sql.GetSql(), sql.GetParameters());
             return count > 0;
         }
-
     }
 }
