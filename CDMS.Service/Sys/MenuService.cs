@@ -127,8 +127,7 @@ namespace CDMS.Service
                     m.SORTID,
                     m.UPDATEBY,
                     m.UPDATEDATE,
-                    m.PARENTID,
-                    m.DISPLAY
+                    m.PARENTID
                 }, m => m.ID == menu.ID);
                 if (flag) RemoveAuthListCache();
                 return new AjaxResult(flag, flag ? "菜单修改成功" : "菜单修改失败");
@@ -174,7 +173,10 @@ namespace CDMS.Service
                     var menu = list.FirstOrDefault(m => m.PARENTID == 0);
                     if (menu != null)
                     {
-                        return GetMenuTree2(menu.ID, list);
+                        var rs = GetMenuTree2(menu.ID, list);
+                        var first = rs.FirstOrDefault();
+                        if (first != null) first.spread = true;
+                        return rs;
                     }
                 }
             }
@@ -205,8 +207,14 @@ namespace CDMS.Service
                     {
                         int menuType = (int)type;
                         var menu = tempList.FirstOrDefault();
-                        menuId = menu.ID;
-                        am.Menus = list.Where(m => m.PARENTID == menuId && m.TYPE == menuType);
+                        am.Menus = list.Where(m => m.PARENTID == menu.ID && m.TYPE == menuType);
+                        //查找 按钮 为 查询 或 下载的 菜单
+                        if (am.Menus != null)
+                        {
+                            string btn_code = columnType == MenuColumnType.CONDITION ? WebConst.MENU_BUTTON_CODE_CONDITION : WebConst.MENU_BUTTON_CODE_REPORT;
+                            var obj = am.Menus.FirstOrDefault(m => string.Equals(m.CODE, btn_code, StringComparison.InvariantCultureIgnoreCase));
+                            if (obj != null) menuId = obj.ID;
+                        }
                     }
                     int uid = log.User.ID;
                     if (menuId > 0) am.Columns = menuRep.GetAuthColumnList(menuId, uid, columnType);
@@ -254,7 +262,6 @@ namespace CDMS.Service
                 children = children.OrderBy(m => m.SORTID).ToList();
                 foreach (var m in children)
                 {
-                    if (!m.DISPLAY) continue;
                     var tree = new MenuTree(m);
                     var ms = GetMenuTree2(m.ID, list);
                     if (ms != null && ms.Count() > 0) tree.children = ms;

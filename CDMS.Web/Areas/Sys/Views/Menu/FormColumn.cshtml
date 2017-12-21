@@ -1,5 +1,4 @@
-﻿
-<form class="layui-form" id="form1">
+﻿<form class="layui-form" id="form1">
     <div class="layui-form-item">
         <label class="layui-form-label">表名<span class="red">*</span></label>
         <div class="layui-input-block">
@@ -17,31 +16,9 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">条件类型<span class="red">*</span></label>
-        <div class="layui-input-block">
-            <select type="text" id="CONDITIONTYPE" name="CONDITIONTYPE" class="layui-select" lay-verify="required">
-                <option value="">请选择</option>
-            </select>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">控件类型<span class="red">*</span></label>
-        <div class="layui-input-block">
-            <select type="text" id="INPUTTYPE" name="INPUTTYPE" class="layui-select" lay-verify="required">
-                <option value="">请选择</option>
-            </select>
-        </div>
-    </div>
-    <div class="layui-form-item">
         <label class="layui-form-label">控件文本<span class="red">*</span></label>
         <div class="layui-input-block">
             <input type="text" id="FIELDTEXT" name="FIELDTEXT" autocomplete="off" placeholder="请输入控件文本" class="layui-input" lay-verify="required" />
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">文本值</label>
-        <div class="layui-input-block">
-            <input type="text" id="FIELDVALUE" name="FIELDVALUE" value="" autocomplete="off" placeholder="请输入文本值" class="layui-input" />
         </div>
     </div>
     <div class="layui-form-item">
@@ -50,13 +27,13 @@
             <input type="text" name="SORTID" autocomplete="off" value="100" placeholder="请输入排序" class="layui-input" />
         </div>
     </div>
+  
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn" lay-submit lay-filter="save">保存</button>
             <button type="reset" class="layui-btn layui-btn-primary" id="cancel">取消</button>
             <input type="hidden" name="ID" value="0" />
-            <input type="hidden" name="TYPE" value="1" />
-            @*<input type="hidden" id="TABLEID" name="TABLEID" />*@
+            <input type="hidden" name="TYPE" value="2" />
             <input type="hidden" id="FIELDTYPE" name="FIELDTYPE" value="0" />
             <input type="hidden" id="NAME" name="NAME" />
         </div>
@@ -67,27 +44,10 @@
     <script type="text/javascript">
         layui.use(['form', 'myselect', 'utils'], function () {
             var $ = layui.jquery, form = layui.form, utils = layui.utils, mySelect = layui.myselect;
-
-            var options1 = {
-                elem: '#CONDITIONTYPE',
-                data: [{ value: '1', text: '等于' }, { value: '2', text: '大于' }, { value: '3', text: '大于等于' }, { value: '4', text: '小于' }, { value: '5', text: '小于等于' }, { value: '6', text: '不等于' }, { value: '7', text: '包含' }]
-            };
-            mySelect.render(options1);
-
-            var options2 = {
-                elem: '#INPUTTYPE',
-                data: [{ value: '1', text: '文本框' }, { value: '2', text: '下拉框' }, { value: '3', text: '隐藏文本框' }, { value: '4', text: '日期框' }],
-                callback: function () {
-                    renderForm();
-                }
-            };
-            mySelect.render(options2);
-
             form.on('submit(save)', function (data) {
                 utils.post('/sys/menuColumn/save', { old: getOldObject(), model: data.field });
                 return false;
             });
-
             form.on('select(TABLEID)', function (data) {
                 var value = data.value;
                 var id = '#NAME1';
@@ -107,7 +67,7 @@
                 }
                 else {
                     $(id).html('');
-                    //$('#TABLEID').val('');
+                    $('#TABLEID').val('');
                     $('#FIELDTYPE').val('0');
                     $('#FIELDTEXT').val('');
                     $('#NAME').val('');
@@ -119,13 +79,11 @@
                 var v = data.value;
                 if (v) {
                     var values = v.split('|');
-                    //$('#TABLEID').val(values[0]);
                     $('#FIELDTYPE').val(values[1]);
                     $('#FIELDTEXT').val(values[2]);
                     $('#NAME').val(values[3]);
                 }
                 else {
-                    //$('#TABLEID').val('');
                     $('#FIELDTYPE').val('0');
                     $('#FIELDTEXT').val('');
                     $('#NAME').val('');
@@ -136,7 +94,7 @@
                 utils.closeFrame();
             });
 
-            var json = '@Html.Raw(ViewBag.Json)';
+             var json = '@Html.Raw(ViewBag.Json)';
             var options4 = {
                 elem: '#TABLEID',
                 callback: function () {
@@ -166,3 +124,5 @@
         });
     </script>
 }
+
+

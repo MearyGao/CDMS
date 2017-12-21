@@ -68,7 +68,6 @@ namespace CDMS.Data
             roleMenuSql.SelectDistinct(m => m.MENUID);
 
             sql.Where(m => m.ENABLED == true).In(m => m.ID, roleMenuSql);
-
             sql.OrderBy(m => m.PARENTID, m => m.SORTID);
 
             return GetList();
@@ -76,16 +75,22 @@ namespace CDMS.Data
 
         public IEnumerable<MenuColumn> GetAuthColumnList(int menuId, int uid, MenuColumnType type)
         {
-            string sqlText = @";WITH 
-TREE AS( 
-SELECT ID,PARENTID,REMARK   FROM dbo.SYS_MENU 
-WHERE ID =@mid AND ENABLED=1
-UNION ALL 
-SELECT a.ID,a.PARENTID,a.REMARK FROM dbo.SYS_MENU AS a ,TREE AS b
-WHERE b.ID=a.PARENTID AND a.ENABLED=1) 
-SELECT b.* FROM TREE AS a LEFT JOIN dbo.SYS_MENUCOLUMN AS b ON a.REMARK=b.ID LEFT JOIN dbo.SYS_ROLEMENU AS c ON c.MENUID=a.ID AND ROLEID IN(SELECT ROLEID FROM dbo.SYS_ROLEUSER WHERE USERID=@uid)
-WHERE a.REMARK IS NOT NULL AND b.ENABLED=1 AND c.ID IS NOT NULL AND b.TYPE=@type
-ORDER BY b.SORTID";
+            //            string sqlText = @";WITH 
+            //TREE AS( 
+            //SELECT ID,PARENTID,OBJECTID  FROM dbo.SYS_MENU 
+            //WHERE ID =@mid AND ENABLED=1
+            //UNION ALL 
+            //SELECT a.ID,a.PARENTID,a.OBJECTID FROM dbo.SYS_MENU AS a ,TREE AS b
+            //WHERE b.ID=a.PARENTID AND a.ENABLED=1) 
+            //SELECT b.* FROM TREE AS a LEFT JOIN dbo.SYS_MENUCOLUMN AS b ON a.OBJECTID=b.ID LEFT JOIN dbo.SYS_ROLEMENU AS c ON c.MENUID=a.ID AND ROLEID IN(SELECT ROLEID FROM dbo.SYS_ROLEUSER WHERE USERID=@uid)
+            //WHERE a.OBJECTID IS NOT NULL AND b.ENABLED=1 AND c.ID IS NOT NULL AND b.TYPE=@type
+            //ORDER BY b.SORTID";
+            string sqlText = @"
+SELECT * FROM dbo.SYS_MENUCOLUMN AS a WHERE MENUID IN(
+SELECT OBJECTID FROM dbo.SYS_MENU WHERE ID=@mid AND OBJECTID IS NOT NULL
+UNION 
+SELECT OBJECTID FROM dbo.SYS_MENU WHERE PARENTID=@mid AND OBJECTID IS NOT NULL
+) AND a.ENABLED=1 AND a.TYPE=@type ";
             Dictionary<string, object> dic = new Dictionary<string, object>();
             dic.Add("@mid", menuId);
             dic.Add("@uid", uid);

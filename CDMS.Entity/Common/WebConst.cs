@@ -17,6 +17,9 @@ namespace CDMS.Entity
 
         public static string DateTimeFmt1 = "yy/MM/dd";
 
+        public static string MENU_BUTTON_CODE_CONDITION = "btn-query";
+        public static string MENU_BUTTON_CODE_REPORT = "btn-download";
+
         public static string GetActionMsg(ActionType type, bool flag)
         {
             string v = "";

@@ -45,6 +45,8 @@ namespace CDMS.Service
         /// <param name="dbKey"></param>
         /// <returns></returns>
         AjaxResult GetTableList(string dbKey);
+
+
     }
 
     internal class MenuTableService : IMenuTableService
@@ -79,6 +81,7 @@ namespace CDMS.Service
                 bool flag = tableId > 0;
                 ActionType type = ActionType.SYS_ADD;
                 string msg = WebConst.GetActionMsg(type, flag);
+                log.AppendAdd("库名", model.DBNAME).AppendAdd("架构名", model.SCHEMANAME).AppendAdd("表名", model.TABLENAME).AppendAdd("别名", model.ALIASNAME).AddSystem(type, tableId);
                 return new AjaxResult(flag, msg);
             }
             else
@@ -94,6 +97,7 @@ namespace CDMS.Service
 
                 ActionType type = ActionType.SYS_UPDATE;
                 string msg = WebConst.GetActionMsg(type, flag);
+                log.AppendUpdate("库名", old.DBNAME, model.DBNAME).AppendUpdate("架构名", old.SCHEMANAME, model.SCHEMANAME).AppendUpdate("表名", old.TABLENAME, model.TABLENAME).AppendUpdate("别名", old.ALIASNAME, model.ALIASNAME).AddSystem(type, model.ID);
                 return new AjaxResult(flag, msg);
             }
         }
@@ -108,6 +112,7 @@ namespace CDMS.Service
             bool flag = tableRep.Delete(ids);
             ActionType type = ActionType.SYS_DELETE;
             string msg = WebConst.GetActionMsg(type, flag);
+            log.AppendDelete(msg, "菜单表ID", ids).AddSystem(type, ids);
             return new AjaxResult(flag, msg);
         }
 

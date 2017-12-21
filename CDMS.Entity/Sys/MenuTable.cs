@@ -14,10 +14,6 @@ namespace CDMS.Entity
         [Column(true)]
         public int ID { get; set; }
         /// <summary>
-        ///MENUID
-        /// </summary>
-        public int MENUID { get; set; }
-        /// <summary>
         ///数据库名称
         /// </summary>
         public string DBNAME { get; set; }

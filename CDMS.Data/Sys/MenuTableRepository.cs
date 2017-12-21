@@ -38,26 +38,22 @@ namespace CDMS.Data
             sql.SelectAll();
             sql.Where(m => m.ENABLED == true);
 
-            var menuSql = sql.Join<Menu>((t, s) => t.MENUID == s.ID, aliasName: "b");
-            menuSql.Select(m => m.NAME);
+            //var menuSql = sql.Join<Menu>((t, s) => t.MENUID == s.ID, aliasName: "b");
+            //menuSql.Select(m => m.NAME);
 
-            //MenuTable table = p.json.ToObject<MenuTable>();
-            //if (table != null)
-            //{
-            //    if (table.MENUID > 0) sql.And(m => m.MENUID == table.MENUID);
-            //    if (!table.TABLENAME.IsEmpty())
-            //    {
-            //        sql.And(m => m.TABLENAME.Contains(table.TABLENAME));
-            //    }
-            //}
-            Dictionary<string, object> dic;
-            string condition = ToSql(p.json, out dic);
-            sql.And(condition);
-            sql.AddParameters(dic);
+            MenuTable table = p.json.ToObject<MenuTable>();
+            if (table != null)
+            {
+                //if (table.MENUID > 0) sql.And(m => m.MENUID == table.MENUID);
+                if (!table.TABLENAME.IsEmpty())
+                {
+                    sql.And(m => m.TABLENAME.Contains(table.TABLENAME));
+                }
+            }
 
-            sql.OrderBy(m => m.MENUID, m => m.SORTID);
+            sql.OrderBy(m => m.SORTID, m => m.ID);
 
-            var list = base.GetDynamicPageList(p, sql);
+            var list = base.GetPageList(p);
 
             return new LayuiPaginationOut(p, list);
         }

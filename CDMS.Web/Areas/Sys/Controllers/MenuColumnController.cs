@@ -33,6 +33,10 @@ namespace CDMS.Web.Areas.Sys.Controllers
             }
             return View();
         }
+        public ActionResult FormColumn()
+        {
+            return View();
+        }
 
         public ActionResult List()
         {
@@ -43,13 +47,6 @@ namespace CDMS.Web.Areas.Sys.Controllers
         public ActionResult GetList(LayuiPaginationIn p)
         {
             var result = column.GetList(p);
-            return Json(result);
-        }
-
-        [HttpPost]
-        public ActionResult GetColumnList2(int menuId, string key = "")
-        {
-            var result = column.GetColumnList(menuId, key);
             return Json(result);
         }
 
@@ -68,9 +65,16 @@ namespace CDMS.Web.Areas.Sys.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetColumnList(int menuId)
+        public ActionResult GetColumnList(int tableId)
         {
-            var result = column.GetColumnList(menuId);
+            var result = column.GetColumnList(tableId);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public ActionResult GetTableList()
+        {
+            var result = column.GetTableList();
             return Json(result);
         }
 

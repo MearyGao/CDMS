@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\CacheService.cs" />
     <Compile Include="Sys\ArticleService.cs" />
     <Compile Include="Sys\ButtonService.cs" />
     <Compile Include="Sys\CategoryService.cs" />

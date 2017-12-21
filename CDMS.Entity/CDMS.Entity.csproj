@@ -74,7 +74,6 @@
     <Compile Include="Sys\RoleUser.cs" />
     <Compile Include="Sys\User.cs" />
     <Compile Include="Common\AjaxResult.cs" />
-    <Compile Include="Common\ApiResult.cs" />
     <Compile Include="Common\IDependency.cs" />
     <Compile Include="Common\Pagination.cs" />
     <Compile Include="Common\Suggestion.cs" />

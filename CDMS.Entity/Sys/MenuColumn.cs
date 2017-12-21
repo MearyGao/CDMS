@@ -16,7 +16,7 @@ namespace CDMS.Entity
         /// <summary>
         ///MENUID
         /// </summary>
-        public int MENUID { get; set; }
+        public string MENUID { get; set; }
 
         /// <summary>
         /// 表ID

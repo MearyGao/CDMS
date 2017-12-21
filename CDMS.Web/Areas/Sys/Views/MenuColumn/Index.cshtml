@@ -1,22 +1,58 @@
-﻿<blockquote class="layui-elem-quote">
-    @Html.Action("button", "menu")
-</blockquote>
+﻿<form class="layui-form" id="form1">
+    <blockquote class="layui-elem-quote">
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <select type="text" id="TABLEID" name="TABLEID" placeholder="请选择表名" class="layui-select">
+                    <option value="0">请选择</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" value="" name="NAME" placeholder="请输入关键字" class="layui-input" />
+            </div>
+            @Html.Action("button", "menu")
+        </div>
+    </blockquote>
+</form>
 <div class="layui-form">
     <table class="layui-table" id="columnList"></table>
 </div>
 
 @section scripts{
     <script type="text/javascript">
-        layui.use(['jquery', 'mytable', 'utils'], function () {
-            var $ = layui.jquery, table = layui.mytable, utils = layui.utils, btn = utils.btns;
+        layui.use(['jquery', 'form', 'mytable', 'myselect', 'utils'], function () {
+            var $ = layui.jquery, table = layui.mytable, utils = layui.utils, btn = utils.btns, form = layui.form, mySelect = layui.myselect;
+
+            var options = {
+                elem: '#TABLEID',
+                callback: function () {
+                    renderForm();
+                },
+                ajax: {
+                    url: '/sys/menuColumn/getTableList',
+                    data: {}
+                }
+            };
+            mySelect.render(options);
 
             var tableId = 'columnList';
-
             var cols = [
                    [{ checkbox: true, width: '5%' },
-                   { field: 'MENUNAME', title: '菜单', width: '10%' },
                    { field: 'TABLENAME', title: '表名', width: '10%' },
                    { field: 'NAME', title: '列名', width: '10%' },
+                   {
+                       field: 'TYPE', title: '类型', width: '10%', content: function (v) {
+                           var value = '';
+                           switch (v) {
+                               case 1:
+                                   value = '查询列';
+                                   break;
+                               case 2:
+                                   value = '报表列';
+                                   break;
+                           }
+                           return value;
+                       }
+                   },
                    {
                        field: 'CONDITIONTYPE', title: '条件类型', width: '10%', content: function (v) {
                            var value = '';
@@ -70,7 +106,6 @@
                    { field: 'SORTID', title: '排序', width: '10%', align: 'center' }
                    ]
             ];
-
             table.render(tableId, '/sys/menuColumn/getList', cols, getParameters());
 
             $('#' + btn.btn_query).click(function () {
@@ -82,6 +117,13 @@
                     title: '添加菜单表',
                     url: '/sys/menuColumn/form?menuid=' + utils.getQueryString('id', '0'),
                     area: ['600px', '500px']
+                });
+            });
+            $('#' + btn.btn_reportColumn).click(function () {
+                var index = utils.open({
+                    title: '添加报表列',
+                    url: '/sys/menuColumn/formcolumn',
+                    area: ['600px', '350px']
                 });
             });
 
@@ -120,8 +162,12 @@
             });
 
             function getParameters() {
-                var json = utils.getFormData(document.body);
-                return { json: JSON.stringify(json) };
+                var model = utils.getFormData(document.body);
+                return { json: JSON.stringify(model) };
+            }
+
+            function renderForm(s) {
+                form.render(s || 'select');
             }
         });
     </script>

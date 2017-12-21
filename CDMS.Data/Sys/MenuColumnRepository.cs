@@ -32,13 +32,6 @@ namespace CDMS.Data
         IEnumerable<dynamic> GetColumnList(int menuId, string key);
 
         /// <summary>
-        /// 查询列信息
-        /// </summary>
-        /// <param name="columnId"></param>
-        /// <returns></returns>
-        dynamic GetColumn(int columnId);
-
-        /// <summary>
         /// 添加菜单列
         /// </summary>
         /// <param name="pid"></param>
@@ -52,6 +45,19 @@ namespace CDMS.Data
         /// <param name="ids"></param>
         /// <returns></returns>
         bool Delete(int[] ids);
+
+        /// <summary>
+        /// 查询菜单列信息
+        /// </summary>
+        /// <param name="columnId"></param>
+        /// <returns></returns>
+        dynamic GetColumn(int columnId);
+
+        /// <summary>
+        /// 获得表列表
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<MenuTable> GetTableList();
     }
 
     public class MenuColumnRepository : RepositoryBase<MenuColumn>, IMenuColumnRepository
@@ -60,27 +66,25 @@ namespace CDMS.Data
         {
             sql.SelectAll();
 
-            var tableSql = sql.Join<MenuTable>((c, t) => c.TABLEID == t.ID && c.MENUID == t.MENUID, aliasName: "b");
+            var tableSql = sql.Join<MenuTable>((c, t) => c.TABLEID == t.ID, aliasName: "b");
             tableSql.Select(m => m.TABLENAME);
-
-            var menuSql = sql.Join<Menu>((c, m) => c.MENUID == m.ID, aliasName: "c");
-            menuSql.Select(m => new { MENUNAME = m.NAME });
 
             sql.Where(m => m.ENABLED == true);
 
-            //var model = p.json.ToObject<MenuColumn>();
-            //if (model != null)
-            //{
-            //    if (model.MENUID > 0) sql.And(m => m.MENUID == model.MENUID);
-            //    if (model.TABLEID > 0) sql.And(m => m.TABLEID == m.TABLEID);
-            //    if (!model.NAME.IsEmpty()) sql.And(m => m.NAME.Contains(model.NAME));
-            //}
-            Dictionary<string, object> dic;
-            string condition = ToSql(p.json, out dic);
-            sql.And(condition);
-            sql.AddParameters(dic);
+            var model = p.json.ToObject<MenuColumn>();
+            if (model != null)
+            {
+                if (model.TABLEID > 0) sql.And(m => m.TABLEID == model.TABLEID);
+                if (!model.NAME.IsEmpty())
+                {
+                    sql.And().Begin();
+                    sql.Or(m => m.NAME.Contains(model.NAME));
+                    tableSql.Or(m => m.TABLENAME.Contains(model.NAME));
+                    sql.End();
+                }
+            }
 
-            sql.OrderBy(m => m.MENUID, m => m.SORTID);
+            sql.OrderBy(m => m.TABLEID, m => m.TYPE, m => m.SORTID);
 
             var list = base.GetDynamicPageList(p, sql);
 
@@ -98,10 +102,10 @@ namespace CDMS.Data
             return count > 0;
         }
 
-        public IEnumerable<dynamic> GetColumnList(int menuId)
+        public IEnumerable<dynamic> GetColumnList(int tableId)
         {
             Dictionary<string, object> dic = new Dictionary<string, object>();
-            dic.Add("@MENUID", menuId);
+            dic.Add("@TABLEID", tableId);
             return base.GetDynamicList("[P_GETTABLECOLUMN]", dic, System.Data.CommandType.StoredProcedure);
         }
 
@@ -142,7 +146,7 @@ WHERE b.ENABLED=1 AND a.ID IS NOT NULL ";
           TYPE ,
           PARENTID ,
           DISPLAY ,
-          REMARK ,
+          OBJECTID ,
           SORTID ,
           CREATEBY ,
           CREATEDATE ,
@@ -150,7 +154,7 @@ WHERE b.ENABLED=1 AND a.ID IS NOT NULL ";
           UPDATEDATE ,
           ENABLED
         )
-SELECT FIELDTEXT,4,{0},1,ID,SORTID,'{1}',GETDATE(),'{1}',GETDATE(),1 FROM dbo.SYS_MENUCOLUMN WHERE ID IN({2})", pid, uid, string.Join(",", cids));
+SELECT FIELDTEXT,4,{0},1,MENUID,SORTID,'{1}',GETDATE(),'{1}',GETDATE(),1 FROM dbo.SYS_MENUCOLUMN WHERE ID IN({2})", pid, uid, string.Join(",", cids));
                 base.Execute(sqlText, null);
             });
         }
@@ -159,9 +163,18 @@ SELECT FIELDTEXT,4,{0},1,ID,SORTID,'{1}',GETDATE(),'{1}',GETDATE(),1 FROM dbo.SY
         {
             sql.SelectAll();
             sql.Where(m => m.ENABLED == true && m.ID == columnId);
-            var tableSql = sql.Join<MenuTable>((c, t) => c.TABLEID == t.ID && c.MENUID == t.MENUID, aliasName: "b");
+            var tableSql = sql.Join<MenuTable>((c, t) => c.TABLEID == t.ID, aliasName: "b");
             tableSql.Select(m => m.TABLENAME);
             return GetDynamicList(sql.GetSql(), sql.GetParameters()).FirstOrDefault();
+        }
+
+        public IEnumerable<MenuTable> GetTableList()
+        {
+            var tableSql = base.GetSqlLam<MenuTable>();
+            tableSql.SelectAll();
+            tableSql.Where(m => m.ENABLED == true);
+            tableSql.OrderBy(m => m.DBNAME, m => m.TABLENAME);
+            return base.GetList<MenuTable>(tableSql.GetSql(), tableSql.GetParameters());
         }
     }
 }

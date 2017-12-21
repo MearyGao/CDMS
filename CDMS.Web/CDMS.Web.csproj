@@ -347,6 +347,8 @@
     <Content Include="Areas\Sys\Views\Dictionary\Form.cshtml" />
     <Content Include="Areas\Sys\Views\Dictionary\Index.cshtml" />
     <Content Include="Views\Shared\MySelect.cshtml" />
+    <Content Include="Areas\Sys\Views\Menu\FormColumn.cshtml" />
+    <Content Include="Areas\Sys\Views\Menu\List.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

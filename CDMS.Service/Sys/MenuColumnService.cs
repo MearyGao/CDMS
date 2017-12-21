@@ -25,13 +25,6 @@ namespace CDMS.Service
         MenuColumn Get(int id);
 
         /// <summary>
-        /// 查询列信息
-        /// </summary>
-        /// <param name="columnId"></param>
-        /// <returns></returns>
-        dynamic GetColumn(int columnId);
-
-        /// <summary>
         /// 获得列列表
         /// </summary>
         /// <param name="menuId"></param>
@@ -39,7 +32,7 @@ namespace CDMS.Service
         AjaxResult GetColumnList(int menuId);
 
         /// <summary>
-        /// 获得列表
+        /// 获得列表(菜单下拉框)
         /// </summary>
         /// <param name="menuId"></param>
         /// <param name="key"></param>
@@ -69,6 +62,19 @@ namespace CDMS.Service
         /// <param name="ids"></param>
         /// <returns></returns>
         AjaxResult Delete(int[] ids);
+
+        /// <summary>
+        /// 查询列信息
+        /// </summary>
+        /// <param name="columnId"></param>
+        /// <returns></returns>
+        dynamic GetColumn(int columnId);
+
+        /// <summary>
+        /// 获得表列表
+        /// </summary>
+        /// <returns></returns>
+        AjaxResult GetTableList();
     }
 
     internal class MenuColumnService : IMenuColumnService
@@ -114,7 +120,23 @@ namespace CDMS.Service
                                select new
                                {
                                    text = string.Format("[{0}].[{1}]", item.TABLENAME, item.COLUMNNAME),
-                                   value = string.Format("{0}|{1}|{2}", item.TABLEID, item.COLUMNTYPE, item.COLUMNTEXT)
+                                   value = string.Format("{0}|{1}|{2}|{3}", item.TABLEID, item.COLUMNTYPE, item.COLUMNTEXT, item.COLUMNNAME)
+                               };
+                return new AjaxResult(true, data: tempList);
+            }
+            return new AjaxResult(false, "");
+        }
+
+        public AjaxResult GetTableList()
+        {
+            var list = columnRep.GetTableList();
+            if (list != null)
+            {
+                var tempList = from item in list
+                               select new
+                               {
+                                   text = string.Format("[{0}].[{1}]", item.DBNAME, item.TABLENAME),
+                                   value = item.ID
                                };
                 return new AjaxResult(true, data: tempList);
             }
@@ -132,23 +154,23 @@ namespace CDMS.Service
             model.ENABLED = true;
             if (addFlag)
             {
-                bool existFlag = columnRep.Exist(m => m.TYPE == model.TYPE && m.MENUID == model.MENUID && m.NAME == model.NAME && m.ENABLED == true);
-                if (existFlag) return new AjaxResult(false, "已经存在该菜单列");
+                model.MENUID = Guid.NewGuid().ToString();
+                //bool existFlag = columnRep.Exist(m => m.TYPE == model.TYPE && m.MENUID == model.MENUID && m.NAME == model.NAME && m.ENABLED == true);
+                //if (existFlag) return new AjaxResult(false, "已经存在该菜单列");
                 int columnId = columnRep.Add<int>(model);
                 bool flag = columnId > 0;
                 if (flag) RemoveCache();
                 ActionType type = ActionType.SYS_ADD;
                 string msg = WebConst.GetActionMsg(type, flag);
+                log.AppendAdd("表ID", model.TABLEID.ToString()).AppendAdd("列名", model.NAME).AppendAdd("类型", model.TYPE.ToString()).AppendAdd("条件类型", model.CONDITIONTYPE.ToString()).AppendAdd("控件类型", model.INPUTTYPE.ToString()).AppendAdd("控件文本", model.FIELDTEXT).AddSystem(type, columnId);
                 return new AjaxResult(flag, msg);
             }
             else
             {
-                bool existFlag = columnRep.Exist(m => m.TYPE == model.TYPE && m.MENUID == model.MENUID && m.NAME == model.NAME && m.ENABLED == true && m.ID != model.ID);
-                if (existFlag) return new AjaxResult(false, "已经存在该菜单列");
-
+                //bool existFlag = columnRep.Exist(m => m.TYPE == model.TYPE && m.MENUID == model.MENUID && m.NAME == model.NAME && m.ENABLED == true && m.ID != model.ID);
+                //if (existFlag) return new AjaxResult(false, "已经存在该菜单列");
                 bool flag = columnRep.Update(model, m => new
                 {
-                    m.MENUID,
                     m.NAME,
                     m.CONDITIONTYPE,
                     m.INPUTTYPE,
@@ -164,6 +186,7 @@ namespace CDMS.Service
                 if (flag) RemoveCache();
                 ActionType type = ActionType.SYS_UPDATE;
                 string msg = WebConst.GetActionMsg(type, flag);
+                log.AppendUpdate("表ID", old.TABLEID.ToString(), model.TABLEID.ToString()).AppendUpdate("列名", old.NAME, model.NAME).AppendUpdate("类型", old.TYPE.ToString(), model.TYPE.ToString()).AppendUpdate("条件类型", old.CONDITIONTYPE.ToString(), model.CONDITIONTYPE.ToString()).AppendUpdate("控件类型", old.INPUTTYPE.ToString(), model.INPUTTYPE.ToString()).AppendUpdate("控件文本", old.FIELDTEXT, model.FIELDTEXT).AddSystem(type, model.ID);
                 return new AjaxResult(flag, msg);
             }
         }
@@ -173,6 +196,7 @@ namespace CDMS.Service
             var user = log.User;
             bool flag = columnRep.AddColumns(pid, user.ACCOUNT, cids);
             string msg = flag ? "分配成功" : "分配失败";
+
             return new AjaxResult(flag, msg);
         }
 
@@ -182,6 +206,7 @@ namespace CDMS.Service
             bool flag = columnRep.Delete(ids);
             if (flag) RemoveCache();
             string msg = WebConst.GetActionMsg(type, flag);
+            log.AppendDelete(msg, "菜单列ID", ids).AddSystem(type, ids);
             return new AjaxResult(flag, msg);
         }
 

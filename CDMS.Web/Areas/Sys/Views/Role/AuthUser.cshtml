@@ -1,10 +1,5 @@
 ﻿<blockquote class="layui-elem-quote">
-    <div class="layui-inline">
-        <div class="layui-input-inline">
-            <input type="text" value="" id="txtKey" placeholder="请输入关键字" class="layui-input" />
-        </div>
-        <a class="layui-btn search_btn" id="btn-query">查询</a>
-    </div>
+   @Html.Action("button", "menu")
 </blockquote>
 <div class="layui-form">
     <table class="layui-table" id="userList"></table>
@@ -29,12 +24,8 @@
                 tr_click_checkable: true,
                 height: 370,
                 page: true,
-                limit: 20,
-                limits: [20, 30, 50],
-                request: {
-                    pageName: 'page', //页码的参数名称，默认：page
-                    limitName: 'rows' //每页数据量的参数名，默认：limit
-                },
+                limit: 10,
+                limits: [10, 20, 30],
                 where: getParameters(),
                 cols: [
                      [{
@@ -89,7 +80,8 @@
             });
 
             function getParameters() {
-                return { queryJson: $('#txtKey').val() };
+                var model = utils.getFormData(document.body);
+                return { json: JSON.stringify(model) };
             }
 
             var json = '@Html.Raw(ViewBag.UserJson)';
