@@ -41,6 +41,11 @@ namespace CDMS.Data
         /// <returns></returns>
         bool AddRoleUsers(int roleId, int[] ids);
 
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="roleIds"></param>
+        /// <returns></returns>
         bool Delete(int[] roleIds);
     }
 
@@ -70,11 +75,20 @@ namespace CDMS.Data
 
         public bool Delete(int[] roleIds)
         {
-            sql.In(m => m.ID, roleIds);
-            sql.Update(new { ENABLED = false }, m => m.ENABLED);
+            return UseTran(() =>
+            {
+                sql.In(m => m.ID, roleIds);
+                sql.Update(new { ENABLED = false }, m => m.ENABLED);
+                base.Execute(sql);
 
-            int count = base.Execute(sql);
-            return count > 0;
+                var roleUserSql = base.GetSqlLam<RoleUser>();
+                roleUserSql.In(m => m.ROLEID, roleIds).Delete();
+                base.Execute(roleUserSql);
+
+                var roleMenuSql = base.GetSqlLam<RoleMenu>();
+                roleMenuSql.In(m => m.ROLEID, roleIds).Delete();
+                base.Execute(roleMenuSql);
+            });
         }
 
         public IEnumerable<RoleMenu> GetRoleMenus(int roleId)
