@@ -87,10 +87,13 @@ namespace CDMS.Data
             //ORDER BY b.SORTID";
             string sqlText = @"
 SELECT * FROM dbo.SYS_MENUCOLUMN AS a WHERE MENUID IN(
-SELECT OBJECTID FROM dbo.SYS_MENU WHERE ID=@mid AND OBJECTID IS NOT NULL
+SELECT OBJECTID FROM (
+SELECT OBJECTID,ID FROM dbo.SYS_MENU WHERE ID=@mid AND OBJECTID IS NOT NULL
 UNION 
-SELECT OBJECTID FROM dbo.SYS_MENU WHERE PARENTID=@mid AND OBJECTID IS NOT NULL
-) AND a.ENABLED=1 AND a.TYPE=@type ";
+SELECT OBJECTID,ID FROM dbo.SYS_MENU WHERE PARENTID=@mid AND OBJECTID IS NOT NULL
+) AS a LEFT JOIN dbo.SYS_ROLEMENU AS b ON a.ID=b.MENUID 
+WHERE b.ROLEID IN(SELECT ROLEID FROM dbo.SYS_ROLEUSER AS a WHERE USERID=@uid)
+) AND a.ENABLED=1 AND a.TYPE=@type  ";
             Dictionary<string, object> dic = new Dictionary<string, object>();
             dic.Add("@mid", menuId);
             dic.Add("@uid", uid);

@@ -49,6 +49,10 @@ layui.define(['jquery', 'table'], function (exports) {
         return table.checkStatus(options.id).data;
     }
 
+    myTable.prototype.on = function (ename, callback) {
+        table.on(ename, callback);
+    }
+
     var mytable = new myTable();
 
     exports('mytable', mytable);

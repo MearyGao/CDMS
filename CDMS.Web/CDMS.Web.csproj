@@ -270,6 +270,7 @@
     <Compile Include="App_Start\UIStyleConfig.cs" />
     <Compile Include="Areas\Sys\Controllers\ArticleController.cs" />
     <Compile Include="Areas\Sys\Controllers\ButtonController.cs" />
+    <Compile Include="Areas\Sys\Controllers\CacheController.cs" />
     <Compile Include="Areas\Sys\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Sys\Controllers\DictionaryController.cs" />
     <Compile Include="Areas\Sys\Controllers\ImageController.cs" />
@@ -349,6 +350,7 @@
     <Content Include="Views\Shared\MySelect.cshtml" />
     <Content Include="Areas\Sys\Views\Menu\FormColumn.cshtml" />
     <Content Include="Areas\Sys\Views\Menu\List.cshtml" />
+    <Content Include="Areas\Sys\Views\Cache\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

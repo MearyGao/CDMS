@@ -1,0 +1,70 @@
+﻿<form id="form1" class="layui-form">
+    <blockquote class="layui-elem-quote">
+        <div class="layui-input-inline">
+            <input type="text" value="" name="key" placeholder="关键词" class="layui-input" />
+        </div>
+        @Html.Action("button", "menu")
+    </blockquote>
+</form>
+
+<div class="layui-form">
+    <table class="layui-table" id="cacheList" lay-filter="cacheList"></table>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        layui.use(['jquery', 'mytable', 'utils'], function () {
+            var $ = layui.jquery, table = layui.mytable, utils = layui.utils, btn = utils.btns;
+
+            var tableId = 'cacheList';
+            var cols = [
+                     [{ checkbox: true, width: '10%' },
+                     { field: 'KEY', title: '缓存名称', width: '20%' },
+                     {
+                         title: '操作', width: '10%', align: 'center', toolbar: '<div><a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a></div>'
+                     }
+                     ]
+            ];
+            table.render(tableId, '/sys/cache/getList', cols, getParameters(), { page: false });
+
+            table.on('tool(' + tableId + ')', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'delete') {
+                    utils.post('/sys/cache/remove', data);
+                    return false;
+                }
+            });
+
+            $('#' + btn.btn_query).click(function () {
+                table.reload({ where: getParameters() });
+            });
+
+            $('#' + btn.btn_delete).click(function () {
+                var rows = table.checkStatus();
+                var len = rows.length;
+                if (len < 1) {
+                    utils.alert('没有选择任何行');
+                    return;
+                }
+                utils.confirm('确实要移除选择缓存吗?', function () {
+                    var ids = [];
+                    $.each(rows, function (i, item) {
+                        ids.push(item.KEY);
+                    });
+                    utils.post('/sys/cache/removeList', { keys: ids });
+                });
+            });
+
+            $('#btn-removeAll').click(function () {
+                utils.confirm('确实要移除所有缓存吗?', function () {
+                    utils.post('/sys/cache/removeAll', {});
+                });
+            });
+
+            function getParameters() {
+                var model = utils.getFormData(document.body);
+                return model;
+            }
+        });
+    </script>
+}

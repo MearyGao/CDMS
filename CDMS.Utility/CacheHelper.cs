@@ -38,9 +38,7 @@ namespace CDMS.Utility
         /// <param name="key">key</param>
         public static void Remove(string key)
         {
-            var obj = HttpRuntime.Cache.Get(key);
-            if (obj != null)
-                HttpRuntime.Cache.Remove(key);
+            HttpRuntime.Cache.Remove(key);
         }
 
         /// <summary>
@@ -125,6 +123,21 @@ namespace CDMS.Utility
             if (obj == null) return;
             DateTime dt = DateTimeTypeHelper.GetDateTime(type, num);
             HttpRuntime.Cache.Insert(key, obj, null, dt, TimeSpan.Zero);
+        }
+
+        /// <summary>
+        /// 获得缓存中所有key
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<string> GetAllKeys()
+        {
+            List<string> keys = new List<string>();
+            IDictionaryEnumerator enumerator = HttpRuntime.Cache.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                keys.Add(enumerator.Key.ToString());
+            }
+            return keys;
         }
     }
 }
