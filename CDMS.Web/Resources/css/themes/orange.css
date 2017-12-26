@@ -38,3 +38,6 @@ border-color:#ff6700;
 .layui-btn-primary:hover {
 border-color:#ff6700;
 }
+
+.layui-laypage input:focus,
+.layui-laypage select:focus{border-color: #ff6700!important;}

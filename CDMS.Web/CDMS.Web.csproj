@@ -101,6 +101,7 @@
     <Content Include="Resources\css\app.css" />
     <Content Include="Resources\css\form.css" />
     <Content Include="Resources\css\login.css" />
+    <Content Include="Resources\css\themes\black.css" />
     <Content Include="Resources\css\themes\blue.css" />
     <Content Include="Resources\css\themes\default.css" />
     <Content Include="Resources\css\themes\green.css" />

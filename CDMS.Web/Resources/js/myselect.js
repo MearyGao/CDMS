@@ -79,8 +79,25 @@
         render: function (o) {
             var sel = new mySelect();
             return sel.set(o).init();
+        },
+        init: function () {
+            var errorTips = 'myselect控件初始化失败--';
+            $('.myselect').each(function () {
+                var select = $(this);
+                var settings_data = select.attr('data-options');
+                var settings = {};
+                try {
+                    settings = new Function('return ' + settings_data)();
+                }
+                catch (e) {
+                    window.console.error(errorTips + settings_data)
+                }
+                select_out.render(settings);
+            });
         }
     };
+
+    select_out.init();
 
     exports('myselect', select_out);
 });
