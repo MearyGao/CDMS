@@ -42,10 +42,6 @@ namespace CDMS.Web.Areas.Sys.Controllers
         [HttpPost]
         public ActionResult Save(User model)
         {
-            if (!string.IsNullOrEmpty(model.IMG))
-                model.IMG = Uri.UnescapeDataString(model.IMG);
-            if (string.IsNullOrEmpty(model.PWD))
-                model.PWD = EncryptHelper.Encrypt("111111");
             var result = userService.Save(model);
             return Json(result);
         }

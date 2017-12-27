@@ -162,7 +162,9 @@ namespace CDMS.Service
             user.UPDATEBY = currentUser.ACCOUNT;
             user.UPDATEDATE = DateTime.Now;
             user.STATUS = 1;
-
+            user.PWD = EncryptHelper.Encrypt(user.PWD);
+            if (!string.IsNullOrEmpty(user.IMG))
+                user.IMG = Uri.UnescapeDataString(user.IMG);
             if (addFlag)
             {
                 bool flag = userRep.Add(user);
@@ -184,15 +186,14 @@ namespace CDMS.Service
                     m.ANSWER,
                     m.UPDATEBY,
                     m.UPDATEDATE,
-                    m.IMG
+                    m.IMG,
+                    m.PWD
                 }, m => m.ID == user.ID);
                 var current = this.GetCurrent();
                 if (current.ID == user.ID)
                 {
                     if (!string.IsNullOrEmpty(user.IMG))
                     {
-                        //string sessionKey = WebConst.UserLoginSessionKey;
-                        //SessionHelper.Remove(sessionKey);
                         current.IMG = user.IMG;
                     }
                 }
