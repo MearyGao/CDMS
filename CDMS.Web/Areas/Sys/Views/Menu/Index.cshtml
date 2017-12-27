@@ -53,6 +53,11 @@
                          }
                      },
                      { field: 'URL', title: 'URL', width: '20%' },
+                     {
+                         field: 'DISPLAY', title: '显示/隐藏', width: '8%', align: 'center', content: function (v) {
+                             return v ? '显示' : '隐藏';
+                         }
+                     },
                      { field: 'SORTID', title: '排序', width: '10%', align: 'center' }
                      ]
                 ],
@@ -69,7 +74,7 @@
                 var index = utils.open({
                     title: '添加菜单',
                     url: '/sys/menu/form',
-                    area: ['700px', '600px']
+                    area: ['700px', '550px']
                 });
             });
 
@@ -92,7 +97,7 @@
                 var index = utils.open({
                     title: '修改菜单',
                     url: '/sys/menu/form?id=' + rows[0].ID,
-                    area: ['700px', '600px']
+                    area: ['700px', '550px']
                 });
             });
 

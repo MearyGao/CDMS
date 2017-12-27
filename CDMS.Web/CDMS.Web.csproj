@@ -115,7 +115,6 @@
     <Content Include="Resources\images\login.jpg" />
     <Content Include="Resources\images\main.jpg" />
     <Content Include="Resources\images\mobile.jpg" />
-    <Content Include="Resources\images\xjpnew.png" />
     <Content Include="Resources\js\app.js" />
     <Content Include="Resources\js\myselect.js" />
     <Content Include="Resources\js\mytable.js" />
@@ -264,6 +263,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppCode\AuthAttribute.cs" />
+    <Compile Include="AppCode\IgnoreAuthAttribute.cs" />
     <Compile Include="AppCode\LoginAttribute.cs" />
     <Compile Include="AppCode\MyJsonResult.cs" />
     <Compile Include="App_Start\AutofacConfig.cs" />

@@ -3,12 +3,6 @@
 }
 
 <blockquote class="layui-elem-quote">
-    <div class="layui-inline">
-        <div class="layui-input-inline">
-            <input type="text" value="" id="txtKey" placeholder="请输入关键字" class="layui-input" />
-        </div>
-        <a class="layui-btn search_btn" id="btn-query">查询</a>
-    </div>
     @Html.Action("button", "menu")
 </blockquote>
 <div class="layui-form">
@@ -107,7 +101,8 @@
             });
 
             function getParameters() {
-                return { queryJson: $('#txtKey').val() };
+                var model = utils.getFormData(document.body);
+                return { json: JSON.stringify(model) };
             }
         });
     </script>

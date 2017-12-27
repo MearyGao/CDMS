@@ -127,7 +127,8 @@ namespace CDMS.Service
                     m.SORTID,
                     m.UPDATEBY,
                     m.UPDATEDATE,
-                    m.PARENTID
+                    m.PARENTID,
+                    m.DISPLAY
                 }, m => m.ID == menu.ID);
                 if (flag) RemoveAuthListCache();
                 return new AjaxResult(flag, flag ? "菜单修改成功" : "菜单修改失败");
@@ -193,7 +194,14 @@ namespace CDMS.Service
                 var tempList = list.Where(m =>
                 {
                     if (string.IsNullOrEmpty(m.URL)) return false;
-                    return string.Equals(m.URL, url, StringComparison.InvariantCultureIgnoreCase);
+                    string[] urls = m.URL.Split('|');
+                    bool flag = false;
+                    foreach (var item in urls)
+                    {
+                        flag = string.Equals(item, url, StringComparison.InvariantCultureIgnoreCase);
+                        if (flag) break;
+                    }
+                    return flag;
                 });
                 if (type == MenuType.Menu)
                 {
@@ -262,6 +270,7 @@ namespace CDMS.Service
                 children = children.OrderBy(m => m.SORTID).ToList();
                 foreach (var m in children)
                 {
+                    if (!m.DISPLAY) continue;
                     var tree = new MenuTree(m);
                     var ms = GetMenuTree2(m.ID, list);
                     if (ms != null && ms.Count() > 0) tree.children = ms;

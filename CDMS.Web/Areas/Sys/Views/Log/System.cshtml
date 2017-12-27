@@ -19,13 +19,13 @@
                     <option value="3">删除</option>
                 </select>
             </div>
-
             <label class="layui-form-label"> 操作时间:</label>
             <div class="layui-input-inline">
                 <input type="text" value="" id="txtDate" placeholder="yyyy-MM-dd" class="layui-input" />
             </div>
-            <a class="layui-btn search_btn" id="btn-query">查询</a>
+            @Html.Action("button", "menu")
         </div>
+
     </blockquote>
 </form>
 <div class="layui-form">

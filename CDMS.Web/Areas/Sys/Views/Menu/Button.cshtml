@@ -16,7 +16,7 @@
         string holder = string.Format("请输入{0}", item.FIELDTEXT);
         string hiddenClass = type == 3 ? "hidden" : "";
         <div class="layui-inline @hiddenClass">
-            <label class="layui-form-label">@item.FIELDTEXT</label>
+            @*<label class="layui-form-label">@item.FIELDTEXT</label>*@
             <div class="layui-input-inline">
                 @if (type == 1)
                 {
@@ -56,6 +56,10 @@
 {
     foreach (var item in buttons)
     {
+        if (!item.DISPLAY)
+        {
+            continue;
+        }
         <div class="layui-inline">
             <a class="layui-btn @item.CLASSNAME" id="@item.CODE">
                 @if (!string.IsNullOrEmpty(item.IMG))

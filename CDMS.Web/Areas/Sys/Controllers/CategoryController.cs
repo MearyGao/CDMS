@@ -9,7 +9,7 @@ using CDMS.Service;
 
 namespace CDMS.Web.Areas.Sys.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
         readonly ICategoryService cate;
         public CategoryController(ICategoryService ics)
@@ -41,6 +41,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
             return Json(result);
         }
 
+        [IgnoreAuth]
         [HttpPost]
         public ActionResult GetTreeSelectList()
         {

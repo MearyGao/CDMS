@@ -9,6 +9,7 @@ using CDMS.Utility;
 
 namespace CDMS.Web.Areas.Sys.Controllers
 {
+    //[IgnoreAuth]
     public class MenuController : BaseController
     {
         readonly IMenuService menuService;
@@ -47,6 +48,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
             return Json(result);
         }
 
+        [IgnoreAuth]
         [HttpPost]
         public ActionResult GetAuthMenuList()
         {
@@ -54,6 +56,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
             return Json(list);
         }
 
+        [IgnoreAuth]
         public ActionResult Button()
         {
             string url = HttpContext.Request.Path.ToLower();
@@ -61,6 +64,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
             return PartialView(model);
         }
 
+        [IgnoreAuth]
         [HttpPost]
         public ActionResult GetTreeSelectList()
         {

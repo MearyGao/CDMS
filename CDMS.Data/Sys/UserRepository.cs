@@ -111,15 +111,19 @@ namespace CDMS.Data
             sql.SelectAll();
 
             sql.And(m => m.STATUS == 1);
-            string key = p.json;
-            if (!key.IsEmpty())
-            {
-                sql.And().Begin();
-                sql.Or(m => m.CNNAME.Contains(key));
-                sql.Or(m => m.ACCOUNT.Contains(key));
-                sql.Or(m => m.ENNAME.Contains(key));
-                sql.End();
-            }
+            //string key = p.json;
+            //if (!key.IsEmpty())
+            //{
+            //    sql.And().Begin();
+            //    sql.Or(m => m.CNNAME.Contains(key));
+            //    sql.Or(m => m.ACCOUNT.Contains(key));
+            //    sql.Or(m => m.ENNAME.Contains(key));
+            //    sql.End();
+            //}
+            Dictionary<string, object> dic;
+            string condition = ToSql(p.json, out dic);
+            sql.And(condition);
+            sql.AddParameters(dic);
             sql.OrderBy(m => m.ID);
             var list = base.GetPageList(p);
             return new LayuiPaginationOut(p, list);

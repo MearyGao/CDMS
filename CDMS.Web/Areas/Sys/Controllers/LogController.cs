@@ -9,7 +9,7 @@ using CDMS.Service;
 
 namespace CDMS.Web.Areas.Sys.Controllers
 {
-    public class LogController : Controller
+    public class LogController : BaseController
     {
         readonly IDevelopLogService devService;
         readonly ILogService logService;

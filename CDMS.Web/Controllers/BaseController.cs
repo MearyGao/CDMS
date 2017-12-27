@@ -10,12 +10,11 @@ using CDMS.Utility;
 
 namespace CDMS.Web
 {
-    [Login]
+    [Login(Order = 1)]
+    [Auth(Order = 2)]
     public class BaseController : Controller
     {
-
         private User user;
-
         public BaseController()
         {
 

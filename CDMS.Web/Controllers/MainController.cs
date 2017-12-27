@@ -17,13 +17,14 @@ namespace CDMS.Web.Controllers
             menuService = ims;
         }
 
-        // GET: Main
+        [IgnoreAuth]
         public ActionResult Index()
         {
             ViewBag.User = base.User;
             return View();
         }
 
+        [IgnoreAuth]
         public ActionResult Home()
         {
             return View();

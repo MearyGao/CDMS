@@ -95,7 +95,7 @@ namespace CDMS.Service
                 string sessionKey = WebConst.UserLoginSessionKey;
                 SessionHelper.Add(sessionKey, user);
             }
-            else msg = "您没有权限登录该系统";
+            else msg = "用户名或密码有误";
 
             return new AjaxResult(flag, msg);
         }

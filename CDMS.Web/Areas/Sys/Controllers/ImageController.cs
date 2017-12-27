@@ -9,7 +9,7 @@ using CDMS.Utility;
 
 namespace CDMS.Web.Areas.Sys.Controllers
 {
-    public class ImageController : Controller
+    public class ImageController : BaseController
     {
         readonly IImageService image;
         public ImageController(IImageService iims)

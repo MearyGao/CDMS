@@ -3,7 +3,6 @@
         <div class="layui-input-inline">
             <input type="text" value="" id="txtDate" placeholder="yyyy-MM-dd" class="layui-input" />
         </div>
-        <a class="layui-btn search_btn" id="btn-query">查询</a>
     </div>
     @Html.Action("button", "menu")
 </blockquote>
@@ -43,7 +42,7 @@
                              return value + 'KB';
                          }
                      },
-                     { field: 'Path', title: '路径', width: '30%' }
+                     { field: 'Path', title: '路径', width: '40%' }
                      ]
                 ],
                 done: function () {

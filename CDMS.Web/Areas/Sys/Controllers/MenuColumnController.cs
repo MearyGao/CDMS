@@ -33,6 +33,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
             }
             return View();
         }
+
         public ActionResult FormColumn()
         {
             return View();
@@ -71,6 +72,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
             return Json(result);
         }
 
+        [IgnoreAuth]
         [HttpPost]
         public ActionResult GetTableList()
         {
