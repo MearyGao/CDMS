@@ -27,6 +27,7 @@ namespace CDMS.Entity
         SYS_IMAGEDETAIL = 14,
         SYS_MENUTABLE = 15,
         SYS_MENUCOLUMN = 16,
-        SYS_DICTIONARY = 17
+        SYS_DICTIONARY = 17,
+        SYS_MENUDATASOURCE = 18
     }
 }

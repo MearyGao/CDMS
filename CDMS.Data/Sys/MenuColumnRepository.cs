@@ -71,18 +71,21 @@ namespace CDMS.Data
 
             sql.Where(m => m.ENABLED == true);
 
-            var model = p.json.ToObject<MenuColumn>();
-            if (model != null)
-            {
-                if (model.TABLEID > 0) sql.And(m => m.TABLEID == model.TABLEID);
-                if (!model.NAME.IsEmpty())
-                {
-                    sql.And().Begin();
-                    sql.Or(m => m.NAME.Contains(model.NAME));
-                    tableSql.Or(m => m.TABLENAME.Contains(model.NAME));
-                    sql.End();
-                }
-            }
+            //var model = p.json.ToObject<MenuColumn>();
+            //if (model != null)
+            //{
+            //    if (model.TABLEID > 0) sql.And(m => m.TABLEID == model.TABLEID);
+            //    if (!model.NAME.IsEmpty())
+            //    {
+            //        sql.And().Begin();
+            //        sql.Or(m => m.NAME.Contains(model.NAME));
+            //        tableSql.Or(m => m.TABLENAME.Contains(model.NAME));
+            //        sql.End();
+            //    }
+            //}
+            Dictionary<string, object> dic;
+            string condition = ToSql(p.json, out dic);
+            sql.And(condition).AddParameters(dic);
 
             sql.OrderBy(m => m.TABLEID, m => m.TYPE, m => m.SORTID);
 

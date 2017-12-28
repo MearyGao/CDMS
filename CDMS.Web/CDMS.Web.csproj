@@ -352,6 +352,7 @@
     <Content Include="Areas\Sys\Views\Menu\FormColumn.cshtml" />
     <Content Include="Areas\Sys\Views\Menu\List.cshtml" />
     <Content Include="Areas\Sys\Views\Cache\Index.cshtml" />
+    <Content Include="Areas\Sys\Views\MenuColumn\DataSource.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

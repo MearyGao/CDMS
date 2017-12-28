@@ -1,14 +1,14 @@
 ﻿<form class="layui-form" id="form1">
     <blockquote class="layui-elem-quote">
         <div class="layui-form-item">
-            <div class="layui-input-inline">
+            @*<div class="layui-input-inline">
                 <select type="text" id="TABLEID" name="TABLEID" placeholder="请选择表名" class="layui-select">
                     <option value="0">请选择</option>
                 </select>
             </div>
             <div class="layui-input-inline">
                 <input type="text" value="" name="NAME" placeholder="请输入关键字" class="layui-input" />
-            </div>
+            </div>*@
             @Html.Action("button", "menu")
         </div>
     </blockquote>
@@ -142,6 +142,24 @@
                     title: '修改菜单表',
                     url: '/sys/menuColumn/form?id=' + rows[0].ID,
                     area: ['600px', '500px']
+                });
+            });
+
+            $('#btn-datasource').click(function () {
+                var rows = table.checkStatus();
+                var len = rows.length;
+                if (len < 1) {
+                    utils.alert('没有选择任何行');
+                    return;
+                }
+                else if (len > 1) {
+                    utils.alert('只能选择一行设置数据源');
+                    return;
+                }
+                var index = utils.open({
+                    title: '设置数据源',
+                    url: '/sys/menuColumn/datasource?id=' + rows[0].ID + '&name=' + rows[0].NAME,
+                    area: ['600px', '600px']
                 });
             });
 

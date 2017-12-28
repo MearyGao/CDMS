@@ -30,14 +30,17 @@ namespace CDMS.Data
             sql.SelectAll();
 
             sql.And(m => m.ENABLED == true);
-            string key = p.json;
-            if (!key.IsEmpty())
-            {
-                sql.And().Begin();
-                sql.Or(m => m.NAME.Contains(key));
-                sql.Or(m => m.REMARK.Contains(key));
-                sql.End();
-            }
+            //string key = p.json;
+            //if (!key.IsEmpty())
+            //{
+            //    sql.And().Begin();
+            //    sql.Or(m => m.NAME.Contains(key));
+            //    sql.Or(m => m.REMARK.Contains(key));
+            //    sql.End();
+            //}
+            Dictionary<string, object> dic;
+            string sqlText = ToSql(p.json, out dic);
+            sql.And(sqlText).AddParameters(dic);
             sql.OrderBy(m => m.SORTID, m => m.ID);
             var list = base.GetPageList(p);
             return new LayuiPaginationOut(p, list);

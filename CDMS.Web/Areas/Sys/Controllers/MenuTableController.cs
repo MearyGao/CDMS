@@ -56,6 +56,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
             return Json(result);
         }
 
+        [IgnoreAuth]
         [HttpPost]
         public ActionResult GetTableList(string dbKey)
         {

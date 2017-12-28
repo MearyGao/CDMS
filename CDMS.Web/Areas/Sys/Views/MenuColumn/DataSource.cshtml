@@ -1,0 +1,87 @@
+﻿
+<form class="layui-form" id="form1">
+    <div class="layui-form-item">
+        <label class="layui-form-label">列名<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="columnName" lay-verify="required" autocomplete="off" class="layui-input" readonly="readonly" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <input type="radio" name="TYPE" value="1" title="远程" checked="checked">
+            <input type="radio" name="TYPE" value="2" title="本地">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">数据源<span class="red">*</span></label>
+        <div class="layui-input-block">
+            <textarea name="DATA" placeholder="请输入数据源" autocomplete="off" class="layui-textarea" lay-verify="required"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">默认文本</label>
+        <div class="layui-input-block">
+            <input type="text" name="DEFAULTTEXT" placeholder="请输入默认文本" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">默认值</label>
+        <div class="layui-input-block">
+            <input type="text" name="DEFAULTVALUE" placeholder="请输入默认值" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">参数Data</label>
+        <div class="layui-input-block">
+            <textarea name="PARAMETERDATA" placeholder="请输入参数Data" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">选项Data</label>
+        <div class="layui-input-block">
+            <textarea name="OPTOINDATA" placeholder="请输入选项Data" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="save">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary" id="cancel">取消</button>
+            <input type="hidden" id="COLUMNID" name="COLUMNID" value="" />
+            <input type="hidden" name="ID" value="0" />
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script type="text/javascript">
+        layui.use(['form', 'myselect', 'utils'], function () {
+            var $ = layui.jquery, form = layui.form, utils = layui.utils, mySelect = layui.myselect;
+
+            form.on('submit(save)', function (data) {
+                utils.post('/sys/menuColumn/saveDataSource', { old: getOldObject(), model: data.field });
+                return false;
+            });
+
+            $('#cancel').on('click', function () {
+                utils.closeFrame();
+            });
+
+            var json = '@Html.Raw(ViewBag.Json)';
+            if (json && json.length > 0) {
+                utils.setFormData(json);
+                form.render();
+            }
+
+            $('#columnName').val(utils.getQueryString('name'));
+            $('#COLUMNID').val(utils.getQueryString('id'));
+
+            function getOldObject() {
+                if (json && json.length > 0) {
+                    return JSON.parse(json);
+                }
+                return null;
+            }
+        });
+    </script>
+}

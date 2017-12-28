@@ -45,8 +45,6 @@ namespace CDMS.Service
         /// <param name="dbKey"></param>
         /// <returns></returns>
         AjaxResult GetTableList(string dbKey);
-
-
     }
 
     internal class MenuTableService : IMenuTableService
@@ -77,6 +75,11 @@ namespace CDMS.Service
             model.ENABLED = true;
             if (addFlag)
             {
+                bool existFlag = tableRep.Exist(m => m.DBNAME == model.DBNAME && m.TABLENAME == model.TABLENAME && m.ALIASNAME == model.ALIASNAME && m.ENABLED == true);
+                if (existFlag)
+                {
+                    return new AjaxResult(false, "已经存在该菜单表");
+                }
                 int tableId = tableRep.Add<int>(model);
                 bool flag = tableId > 0;
                 ActionType type = ActionType.SYS_ADD;
@@ -86,6 +89,11 @@ namespace CDMS.Service
             }
             else
             {
+                bool existFlag = tableRep.Exist(m => m.ID != model.ID && m.DBNAME == model.DBNAME && m.TABLENAME == model.TABLENAME && m.ALIASNAME == model.ALIASNAME && m.ENABLED == true);
+                if (existFlag)
+                {
+                    return new AjaxResult(false, "已经存在该菜单表");
+                }
                 bool flag = tableRep.Update(model, m => new
                 {
                     m.DBNAME,

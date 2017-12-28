@@ -27,7 +27,7 @@ namespace CDMS.Data
         /// </summary>
         /// <param name="menuId"></param>
         /// <returns></returns>
-        IEnumerable<MenuColumn> GetAuthColumnList(int menuId, int uid, MenuColumnType type);
+        IEnumerable<dynamic> GetAuthColumnList(int menuId, int uid, MenuColumnType type);
 
         /// <summary>
         /// 删除菜单
@@ -73,7 +73,7 @@ namespace CDMS.Data
             return GetList();
         }
 
-        public IEnumerable<MenuColumn> GetAuthColumnList(int menuId, int uid, MenuColumnType type)
+        public IEnumerable<dynamic> GetAuthColumnList(int menuId, int uid, MenuColumnType type)
         {
             //            string sqlText = @";WITH 
             //TREE AS( 
@@ -86,20 +86,20 @@ namespace CDMS.Data
             //WHERE a.OBJECTID IS NOT NULL AND b.ENABLED=1 AND c.ID IS NOT NULL AND b.TYPE=@type
             //ORDER BY b.SORTID";
             string sqlText = @"
-SELECT * FROM dbo.SYS_MENUCOLUMN AS a WHERE MENUID IN(
+SELECT a.*,b.TYPE AS STYPE,b.DATA,b.PARAMETERDATA,b.OPTOINDATA,b.DEFAULTTEXT,b.DEFAULTVALUE FROM dbo.SYS_MENUCOLUMN AS a LEFT JOIN dbo.SYS_MENUDATASOURCE AS b ON a.ID=b.COLUMNID AND b.ENABLED=1 WHERE MENUID IN(
 SELECT OBJECTID FROM (
 SELECT OBJECTID,ID FROM dbo.SYS_MENU WHERE ID=@mid AND OBJECTID IS NOT NULL
 UNION 
 SELECT OBJECTID,ID FROM dbo.SYS_MENU WHERE PARENTID=@mid AND OBJECTID IS NOT NULL
 ) AS a LEFT JOIN dbo.SYS_ROLEMENU AS b ON a.ID=b.MENUID 
 WHERE b.ROLEID IN(SELECT ROLEID FROM dbo.SYS_ROLEUSER AS a WHERE USERID=@uid)
-) AND a.ENABLED=1 AND a.TYPE=@type  ";
+) AND a.ENABLED=1 AND a.TYPE=@type ORDER BY A.SORTID,A.ID ";
             Dictionary<string, object> dic = new Dictionary<string, object>();
             dic.Add("@mid", menuId);
             dic.Add("@uid", uid);
             dic.Add("@type", (int)type);
 
-            return base.GetList<MenuColumn>(sqlText, dic);
+            return base.GetDynamicList(sqlText, dic);
         }
     }
 }

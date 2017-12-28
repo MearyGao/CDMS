@@ -66,6 +66,7 @@
     <Compile Include="Sys\Log.cs" />
     <Compile Include="Sys\Menu.cs" />
     <Compile Include="Sys\MenuColumn.cs" />
+    <Compile Include="Sys\MenuDataSource.cs" />
     <Compile Include="Sys\MenuTable.cs" />
     <Compile Include="Sys\Org.cs" />
     <Compile Include="Sys\OrgUser.cs" />

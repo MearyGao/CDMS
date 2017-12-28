@@ -319,6 +319,9 @@ layui.define(['layer'], function (exports) {
                 //if (tagFlag) return;
                 switch (type) {
                     case 'radio':
+                        input.prop('checked', false);
+                        form.find('[name="' + key + '"][value="' + value + '"]').prop("checked", true);
+                        break;
                     case "checkbox":
                         if (data[key] == true || parseInt(value, 10) == 1 || value == 'Y') {
                             input.attr("checked", 'checked').val(value);

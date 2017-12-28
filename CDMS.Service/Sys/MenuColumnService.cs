@@ -135,7 +135,7 @@ namespace CDMS.Service
                 var tempList = from item in list
                                select new
                                {
-                                   text = string.Format("[{0}].[{1}]", item.DBNAME, item.TABLENAME),
+                                   text = string.Format("[{0}].[{1}].[{2}]", item.DBNAME, item.TABLENAME, item.ALIASNAME),
                                    value = item.ID
                                };
                 return new AjaxResult(true, data: tempList);
@@ -155,8 +155,8 @@ namespace CDMS.Service
             if (addFlag)
             {
                 model.MENUID = Guid.NewGuid().ToString();
-                //bool existFlag = columnRep.Exist(m => m.TYPE == model.TYPE && m.MENUID == model.MENUID && m.NAME == model.NAME && m.ENABLED == true);
-                //if (existFlag) return new AjaxResult(false, "已经存在该菜单列");
+                bool existFlag = columnRep.Exist(m => m.TYPE == model.TYPE && m.TABLEID == model.TABLEID && m.NAME == model.NAME && m.ENABLED == true);
+                if (existFlag) return new AjaxResult(false, "已经存在该菜单列");
                 int columnId = columnRep.Add<int>(model);
                 bool flag = columnId > 0;
                 if (flag) RemoveCache();
@@ -167,8 +167,8 @@ namespace CDMS.Service
             }
             else
             {
-                //bool existFlag = columnRep.Exist(m => m.TYPE == model.TYPE && m.MENUID == model.MENUID && m.NAME == model.NAME && m.ENABLED == true && m.ID != model.ID);
-                //if (existFlag) return new AjaxResult(false, "已经存在该菜单列");
+                bool existFlag = columnRep.Exist(m => m.TYPE == model.TYPE && m.TABLEID == model.TABLEID && m.NAME == model.NAME && m.ENABLED == true && m.ID != model.ID);
+                if (existFlag) return new AjaxResult(false, "已经存在该菜单列");
                 bool flag = columnRep.Update(model, m => new
                 {
                     m.NAME,

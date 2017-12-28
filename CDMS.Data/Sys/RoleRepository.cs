@@ -133,16 +133,20 @@ namespace CDMS.Data
         {
             return base.UseTran(() =>
             {
-                var userSql = base.GetSqlLam<User>("b");
-                userSql.Select(m => new { USERID = m.ID }).Select(string.Format("{0} AS ROLEID", roleId));
-                userSql.Where(m => m.STATUS == 1).In(m => m.ID, ids);
 
                 var roleUserSql = base.GetSqlLam<RoleUser>();
                 roleUserSql.Delete(m => m.ROLEID == roleId);
                 base.Execute(roleUserSql);
 
-                roleUserSql.InsertWithQuery(m => new { m.USERID, m.ROLEID }, userSql);
-                base.Execute(roleUserSql);
+                if (ids != null && ids.Length > 0)
+                {
+                    var userSql = base.GetSqlLam<User>("b");
+                    userSql.Select(m => new { USERID = m.ID }).Select(string.Format("{0} AS ROLEID", roleId));
+                    userSql.Where(m => m.STATUS == 1).In(m => m.ID, ids);
+
+                    roleUserSql.InsertWithQuery(m => new { m.USERID, m.ROLEID }, userSql);
+                    base.Execute(roleUserSql);
+                }
             });
         }
     }

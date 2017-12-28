@@ -90,10 +90,10 @@
                     return;
                 }
                 var type = rows[0].TYPE;
-                if (type > 3) {
-                    utils.alert('只能修改[目录,菜单,按钮]');
-                    return;
-                }
+                //if (type > 3) {
+                //    utils.alert('只能修改[目录,菜单,按钮]');
+                //    return;
+                //}
                 var index = utils.open({
                     title: '修改菜单',
                     url: '/sys/menu/form?id=' + rows[0].ID,

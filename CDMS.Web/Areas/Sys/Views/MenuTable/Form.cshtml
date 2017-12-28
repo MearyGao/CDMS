@@ -1,11 +1,5 @@
 ﻿
 <form class="layui-form" id="form1">
-    @*<div class="layui-form-item">
-        <label class="layui-form-label">菜单<span class="red">*</span></label>
-        <div class="layui-input-block">
-            <select type="text" id="MENUID" name="MENUID" lay-filter="MENUID" autocomplete="off" placeholder="请选择菜单" class="layui-select"></select>
-        </div>
-    </div>*@
     <div class="layui-form-item">
         <label class="layui-form-label">数据库<span class="red">*</span></label>
         <div class="layui-input-block">
@@ -57,7 +51,7 @@
             var dboId = '#SCHEMANAME';
             var dbOptions = {
                 elem: dbId,
-                data: [{ value: 'CDMS_BASE', text: '默认-[connectString]' }, { value: 'CDMS', text: 'CDMS-[connectString]' }],
+                data: [{ value: 'CDMS_BASE', text: '默认-[CDMS_BASE]' }],
                 callback: function () {
                     renderForm();
                 }

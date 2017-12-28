@@ -24,7 +24,28 @@
                 }
                 else if (type == 2)
                 {
-                    <select id="@id" name="@name" class="layui-select"></select>
+                    string data = "{" + string.Format("elem:'#{0}',", id);
+                    if (item.STYPE == 1)
+                    {
+                        data += "ajax:{" + string.Format("url:'{0}'", item.DATA) + "},";
+                    }
+                    else
+                    {
+                        data += string.Format("data:{0},", item.DATA);
+                    }
+                    string dtext = "请选择";
+                    string dvalue = "";
+                    if (!string.IsNullOrEmpty(item.DEFAULTTEXT))
+                    {
+                        dtext = item.DEFAULTTEXT;
+                    }
+                    if (!string.IsNullOrEmpty(item.DEFAULTVALUE))
+                    {
+                        dvalue = item.DEFAULTVALUE;
+                    }
+                    data += "callback:function(){ layui.form.render('select');} }";
+                    string dvoption = string.Format("<option value='{0}'>{1}</option>", dvalue, dtext);
+                    <select id="@id" name="@name" class="layui-select myselect" data-options="@data">@Html.Raw(dvoption)</select>
                 }
                 else if (type == 3)
                 {

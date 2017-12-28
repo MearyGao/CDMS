@@ -12,10 +12,11 @@ namespace CDMS.Web.Areas.Sys.Controllers
     public class MenuColumnController : BaseController
     {
         readonly IMenuColumnService column;
-
-        public MenuColumnController(IMenuColumnService imcs)
+        readonly IMenuDataSourceService dataSource;
+        public MenuColumnController(IMenuColumnService imcs, IMenuDataSourceService imdss)
         {
             column = imcs;
+            dataSource = imdss;
         }
         // GET: Sys/MenuColumn
         public ActionResult Index()
@@ -44,10 +45,29 @@ namespace CDMS.Web.Areas.Sys.Controllers
             return View();
         }
 
+        //btn-datasource
+        public ActionResult DataSource(int? id)
+        {
+            int dsId = id.HasValue ? id.Value : 0;
+            if (dsId > 0)
+            {
+                var model = dataSource.Get(dsId);
+                ViewBag.Json = JsonHelper.ToJson(model);
+            }
+            return View();
+        }
+
         [HttpPost]
         public ActionResult GetList(LayuiPaginationIn p)
         {
             var result = column.GetList(p);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public ActionResult SaveDataSource(MenuDataSource old, MenuDataSource model)
+        {
+            var result = dataSource.Save(old, model);
             return Json(result);
         }
 
@@ -65,6 +85,7 @@ namespace CDMS.Web.Areas.Sys.Controllers
             return Json(result);
         }
 
+        [IgnoreAuth]
         [HttpPost]
         public ActionResult GetColumnList(int tableId)
         {

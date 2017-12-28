@@ -9,7 +9,7 @@ namespace CDMS.Entity
     {
         public IEnumerable<Menu> Menus { get; set; }
 
-        public IEnumerable<MenuColumn> Columns { get; set; }
+        public IEnumerable<dynamic> Columns { get; set; }
 
         public AuthMenu() { }
 
