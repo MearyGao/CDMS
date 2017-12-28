@@ -1,6 +1,6 @@
 ﻿<form class="layui-form" id="form1">
     <blockquote class="layui-elem-quote">
-        <div class="layui-form-item">
+        @*<div class="layui-form-item">
             <div class="layui-input-inline">
                 <select type="text" id="TABLEID" name="TABLEID" placeholder="请选择表名" class="layui-select">
                     <option value="0">请选择</option>
@@ -10,7 +10,8 @@
                 <input type="text" value="" name="NAME" placeholder="请输入关键字" class="layui-input" />
             </div>
             <a class="layui-btn" id="btn-query">查询</a>
-        </div>
+        </div>*@
+        @Html.Action("button", "menu")
     </blockquote>
 </form>
 <div class="layui-form">
@@ -43,8 +44,8 @@
             var tableId = 'columnList';
             var cols = [
                    [{ checkbox: true, width: '5%' },
-                   { field: 'TABLENAME', title: '表名', width: '15%' },
-                   { field: 'NAME', title: '列名', width: '15%' },
+                   { field: 'TABLENAME', title: '表名', width: '20%' },
+                   { field: 'NAME', title: '列名', width: '20%' },
                    {
                        field: 'CONDITIONTYPE', title: '条件类型', width: '15%', content: function (v) {
                            var value = '';

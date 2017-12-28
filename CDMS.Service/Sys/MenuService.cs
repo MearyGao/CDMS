@@ -83,7 +83,7 @@ namespace CDMS.Service
             var list = GetTreeList();
 
             var treeList = from item in list
-                           where item.TYPE < 3
+                           where item.TYPE < 4
                            select new
                            {
                                id = item.ID,
