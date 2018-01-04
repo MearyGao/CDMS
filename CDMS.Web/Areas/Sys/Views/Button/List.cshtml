@@ -1,14 +1,5 @@
-﻿@{
-    ViewBag.Title = "Index";
-}
-
-<blockquote class="layui-elem-quote">
-    <div class="layui-inline">
-        <div class="layui-input-inline">
-            <input type="text" value="" id="txtKey" placeholder="请输入关键字" class="layui-input" />
-        </div>
-        <a class="layui-btn search_btn" id="btn-query">查询</a>
-    </div>
+﻿<blockquote class="layui-elem-quote">
+   @Html.Action("button", "menu")
 </blockquote>
 <div class="layui-form">
     <table class="layui-table" id="buttonList"></table>
@@ -23,48 +14,34 @@
 
 @section scripts{
     <script type="text/javascript">
-        layui.use(['jquery', 'table', 'utils'], function () {
-            var $ = layui.jquery, table = layui.table, utils = layui.utils, btn = utils.btns;
+        layui.use(['jquery', 'mytable', 'utils'], function () {
+            var $ = layui.jquery, table = layui.mytable, utils = layui.utils, btn = utils.btns;
 
             var tableId = 'buttonList';
-            var options = {
-                id: tableId,
-                elem: '#' + tableId,
-                url: '/sys/button/getList',
-                height: 400,
-                method: 'post',
-                tr_click_checkable: true,
-                page: true,
-                limit: 20,
-                limits: [20, 30, 50],
-                request: {
-                    pageName: 'page', //页码的参数名称，默认：page
-                    limitName: 'rows' //每页数据量的参数名，默认：limit
-                },
-                where: getParameters(),
-                cols: [
-                     [{ checkbox: true, width: '10%' },
-                     { field: 'NAME', title: '按钮名称', width: '30%' },
+            var cols = [
+                     [{ checkbox: true, width: '5%' },
+                     { field: 'NAME', title: '名称', width: '15%' },
+                     { field: 'CODE', title: 'CODE', width: '10%' },
                      {
-                         field: 'IMG', title: 'ICON', width: '15%', align: 'center',
+                         field: 'IMG', title: 'ICON', width: '10%', align: 'center',
                          content: function (value, item, index) {
                              if (value) return '<i class="layui-icon">' + value + '</i>';
                              return '';
                          }
                      },
-                     { field: 'CLASSNAME', title: '样式', width: '20%' },
-                     { field: 'SORTID', title: '排序', width: '15%', align: 'center' }
+                     { field: 'CLASSNAME', title: '样式', width: '15%' },
+                     { field: 'REMARK', title: '描述', width: '20%' },
+                     { field: 'SORTID', title: '排序', width: '10%', align: 'center' }
                      ]
-                ]
-            };
-            table.render(options);
+            ];
+            table.render('buttonList', '/sys/button/getList', cols, getParameters());
 
             $('#' + btn.btn_query).click(function () {
-                table.reload(tableId, { where: getParameters() });
+                table.reload({ where: getParameters() });
             });
 
             $('#btn-sure').on('click', function () {
-                var rows = table.checkStatus(tableId).data;
+                var rows = table.checkStatus();
                 var len = rows.length;
                 if (len < 1) {
                     utils.alert('没有选择任何行');
@@ -83,7 +60,8 @@
             });
 
             function getParameters() {
-                return { queryJson: $('#txtKey').val() };
+                var json = JSON.stringify(utils.getFormData(document.body));
+                return { json: json };
             }
         });
     </script>
