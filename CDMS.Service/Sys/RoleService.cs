@@ -66,7 +66,7 @@ namespace CDMS.Service
         /// <param name="roleId">角色ID</param>
         /// <param name="ids">用户ID 数组</param>
         /// <returns></returns>
-        AjaxResult AddRoleUsers(int roleId, int[] ids);
+        AjaxResult AddRoleUsers(int roleId, int[] ids, int[] deleteIds);
     }
 
     internal class RoleService : IRoleService
@@ -153,13 +153,15 @@ namespace CDMS.Service
             return roleRep.GetRoleUsers(roleId);
         }
 
-        public AjaxResult AddRoleUsers(int roleId, int[] ids)
+        public AjaxResult AddRoleUsers(int roleId, int[] ids, int[] deleteIds)
         {
             if (roleId < 1) return new AjaxResult(false, "参数错误[ROLEID]");
-            bool flag = roleRep.AddRoleUsers(roleId, ids);
+            bool flag = roleRep.AddRoleUsers(roleId, ids, deleteIds);
             if (flag)
             {
-                RemoveCache();
+                string key = ServiceConst.UserAuthListCache.Split('_')[0];
+
+                CacheHelper.RemoveByPrefix(key);
             }
             return new AjaxResult(flag, flag ? "授权用户成功" : "授权用户失败");
         }

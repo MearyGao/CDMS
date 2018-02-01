@@ -1,8 +1,8 @@
 ﻿<blockquote class="layui-elem-quote">
-   @Html.Action("button", "menu")
+    @Html.Action("button", "menu")
 </blockquote>
 <div class="layui-form">
-    <table class="layui-table" id="userList"></table>
+    <table class="layui-table" id="userList" lay-filter="userList"></table>
 </div>
 <div class="right">
     <button class="layui-btn" id="btn-sure" type="button">确定</button>
@@ -21,7 +21,7 @@
                 elem: '#' + tableId,
                 url: '/sys/user/getList',
                 method: 'post',
-                tr_click_checkable: true,
+                tr_click_checkable: false,
                 height: 370,
                 page: true,
                 limit: 10,
@@ -55,24 +55,50 @@
                      ]
                 ]
             };
-            table.render(options);
+
 
             $('#' + btn.btn_query).click(function () {
                 table.reload(tableId, { where: getParameters() });
             });
 
+            var userDeleteIds = [];
+
+            table.on('checkbox(userList)', function (obj) {
+                if (obj.type == 'all') {
+                    if (obj.checked) return;
+                    var rows = table.cache[tableId];
+                    $.each(rows, function (i, data) {
+                        var chkFlag = getChkFlag(data.ID);
+                        if (chkFlag) userDeleteIds.push(data.ID);
+                    });
+                }
+                else {
+                    var chkFlag = obj.checked;
+                    if (chkFlag) return;
+                    var data = obj.data;
+                    chkFlag = getChkFlag(data.ID);
+                    if (chkFlag) {
+                        userDeleteIds.push(data.ID);
+                    }
+                }
+            });
+
+            table.render(options);
+
             $('#btn-sure').click(function () {
                 var rows = table.checkStatus(tableId).data;
-                var len = rows.length;
-                if (len < 1) {
-                    utils.alert('没有选择任何授权用户');
-                    return;
-                }
+                //var len = rows.length;
+                //if (len < 1) {
+                //    utils.alert('没有选择任何授权用户');
+                //    return;
+                //}
                 var ids = [];
                 $.each(rows, function (i, item) {
-                    ids.push(item.ID);
+                    var chkFlag = getChkFlag(item.ID);
+                    if (!chkFlag)
+                        ids.push(item.ID);
                 });
-                utils.post('/sys/role/addRoleUsers', { roleId: $('#roleId').val(), ids: ids });
+                utils.post('/sys/role/addRoleUsers', { roleId: $('#roleId').val(), ids: ids, deleteIds: userDeleteIds });
             });
 
             $('#btn-cancel').on('click', function () {

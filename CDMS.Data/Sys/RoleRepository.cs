@@ -39,7 +39,7 @@ namespace CDMS.Data
         /// <param name="roleId"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
-        bool AddRoleUsers(int roleId, int[] ids);
+        bool AddRoleUsers(int roleId, int[] ids, int[] deleteIds);
 
         /// <summary>
         /// 删除角色
@@ -129,21 +129,22 @@ namespace CDMS.Data
             return base.GetList<RoleUser>(roleUserSql.GetSql(), roleUserSql.GetParameters());
         }
 
-        public bool AddRoleUsers(int roleId, int[] ids)
+        public bool AddRoleUsers(int roleId, int[] ids, int[] deleteIds)
         {
             return base.UseTran(() =>
             {
-
                 var roleUserSql = base.GetSqlLam<RoleUser>();
-                roleUserSql.Delete(m => m.ROLEID == roleId);
-                base.Execute(roleUserSql);
+                if (deleteIds != null && deleteIds.Length > 0)
+                {
+                    roleUserSql.In(m => m.USERID, deleteIds).Delete();
+                    base.Execute(roleUserSql);
+                }
 
                 if (ids != null && ids.Length > 0)
                 {
                     var userSql = base.GetSqlLam<User>("b");
                     userSql.Select(m => new { USERID = m.ID }).Select(string.Format("{0} AS ROLEID", roleId));
                     userSql.Where(m => m.STATUS == 1).In(m => m.ID, ids);
-
                     roleUserSql.InsertWithQuery(m => new { m.USERID, m.ROLEID }, userSql);
                     base.Execute(roleUserSql);
                 }

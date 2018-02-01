@@ -77,9 +77,9 @@ namespace CDMS.Web.Areas.Sys.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddRoleUsers(int roleId, int[] ids)
+        public ActionResult AddRoleUsers(int roleId, int[] ids, int[] deleteIds)
         {
-            var result = roleService.AddRoleUsers(roleId, ids);
+            var result = roleService.AddRoleUsers(roleId, ids, deleteIds);
             return Json(result);
         }
     }
